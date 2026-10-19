@@ -111,7 +111,7 @@ export default function Hero({ onContact }: { onContact: () => void }) {
               <svg width="10" height="12" viewBox="0 0 10 12" aria-hidden="true" className="text-accent">
                 <path d="M0 0l10 6-10 6z" fill="currentColor" />
               </svg>
-              Watch my showreel
+              Watch my intro
             </button>
           </motion.div>
         </div>

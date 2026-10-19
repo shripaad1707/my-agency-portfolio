@@ -17,7 +17,7 @@ export const CONTACT = {
 };
 
 export const NAV_LINKS = [
-  { id: 'showreel', label: 'Showreel' },
+  { id: 'showreel', label: 'Intro' },
   { id: 'services', label: 'Services' },
   { id: 'examples', label: 'Examples' },
   { id: 'process', label: 'Process' },
@@ -37,7 +37,19 @@ export const HERO_CARDS = [
   { icon: 'play', title: 'New reel ready', text: '30 seconds, for Instagram' },
 ] as const;
 
-/** The row of services under the showreel. */
+/** Jump-to points in the 90-second intro video (seconds). */
+export const INTRO_CHAPTERS = [
+  { t: 0, label: 'Intro' },
+  { t: 16.5, label: '3D and Blender' },
+  { t: 30.75, label: 'Websites' },
+  { t: 42.5, label: 'Video and motion' },
+  { t: 50, label: 'Automations' },
+  { t: 67, label: 'Growth' },
+  { t: 76, label: 'Who I work with' },
+  { t: 82, label: "Let's talk" },
+] as const;
+
+/** The row of services under the intro video. */
 export const CHIPS = [
   { icon: 'web', label: 'Website design' },
   { icon: 'chat', label: 'AI chat and voice agents' },

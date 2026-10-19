@@ -43,7 +43,10 @@ export function scrollToId(id: string) {
     return;
   }
   const el = document.getElementById(id);
-  if (!el) return;
+  if (el) scrollToEl(el);
+}
+
+export function scrollToEl(el: HTMLElement) {
   if (lenis) lenis.scrollTo(el, { offset: NAV_OFFSET, force: true });
   else el.scrollIntoView();
 }
