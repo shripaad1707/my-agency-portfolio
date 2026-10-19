@@ -55,5 +55,4 @@ The first time someone sends the form, FormSubmit emails you an **Activate Form*
 
 - `public/media/intro.mp4` is the 90-second vertical intro (1080x1920, H.264). `public/media/intro.webm` is a smaller VP9 copy for browsers that can't play mp4.
 - `public/img/intro-poster.webp` is the still that shows before the video plays.
-- The jump-to chapters under the video are `INTRO_CHAPTERS` in `src/content.ts` (times in seconds).
 - `public/img/shripaad.webp` is the portrait.
