@@ -42,10 +42,10 @@ function Phone({ sample, index }: { sample: Sample; index: number }) {
 
   return (
     <motion.figure
-      className="w-[min(72vw,280px)] shrink-0 snap-center lg:w-auto"
+      className="w-[min(62vw,260px)] shrink-0 snap-center lg:w-auto"
       initial={reduce ? false : { opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.25 }}
+      viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 1.3, ease: EASE, delay: index * 0.08 }}
     >
       <div className="relative aspect-[9/16] overflow-hidden rounded-[30px] border-[6px] border-night bg-night shadow-[0_30px_70px_-30px_rgba(14,17,33,0.55)]">

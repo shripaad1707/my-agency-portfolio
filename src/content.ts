@@ -48,7 +48,12 @@ export const CHIPS = [
 ] as const;
 
 /** Sample UGC ads shown in phone frames. Files live in public/media/ugc. */
-export const UGC_SAMPLES: { id: string; product: string; angle: string; src: string; poster: string }[] = [];
+export const UGC_SAMPLES: { id: string; product: string; angle: string; src: string; poster: string }[] = [
+  { id: 'wildgold', product: 'Wild Gold', angle: 'Tallow balm, skincare routine', src: 'media/ugc-wildgold.mp4', poster: 'img/ugc/wildgold.webp' },
+  { id: 'fresco', product: 'Fresco Sauce', angle: 'Hot sauce, taste test', src: 'media/ugc-fresco.mp4', poster: 'img/ugc/fresco.webp' },
+  { id: 'littleseed', product: 'Little Seed Farm', angle: 'Deodorant, quick demo', src: 'media/ugc-littleseed.mp4', poster: 'img/ugc/littleseed.webp' },
+  { id: 'whaling', product: 'Old Whaling Co.', angle: 'Body butter, seasonal hook', src: 'media/ugc-whaling.mp4', poster: 'img/ugc/whaling.webp' },
+];
 
 /** The UGC ad section: the starter offer and how it works. */
 export const UGC = {
