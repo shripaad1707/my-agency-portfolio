@@ -230,7 +230,23 @@ function FollowVisual({ start }: { start: boolean }) {
   );
 }
 
-const VISUALS = { seen: SeenVisual, web: WebVisual, reply: ReplyVisual, follow: FollowVisual };
+/* 3D renders: the real NOVA render, with a soft studio caption */
+function RenderVisual({ start }: { start: boolean }) {
+  const step = useSteps([200, 600], start);
+  return (
+    <div className="absolute inset-0 grid grid-cols-2 gap-3 p-4 sm:p-5">
+      <Show on={step >= 1} className="relative overflow-hidden rounded-xl bg-[#e9e7f1]">
+        <img src={`${import.meta.env.BASE_URL}img/renders/solenne.webp`} alt="" className="h-full w-full object-cover" />
+      </Show>
+      <Show on={step >= 2} className="relative overflow-hidden rounded-xl bg-[#e9e7f1]">
+        <img src={`${import.meta.env.BASE_URL}img/renders/fuego.webp`} alt="" className="h-full w-full object-cover" />
+        <span className="absolute inset-x-3 bottom-3 rounded-lg bg-white/90 px-3 py-2 text-[12px] font-medium backdrop-blur">Rendered in 3D</span>
+      </Show>
+    </div>
+  );
+}
+
+const VISUALS = { ugc: SeenVisual, web: WebVisual, render: RenderVisual, reply: ReplyVisual };
 const SPANS = ['lg:col-span-7', 'lg:col-span-5', 'lg:col-span-5', 'lg:col-span-7'];
 
 function GrowthCard({ index }: { index: number }) {
@@ -271,7 +287,7 @@ export default function Growth() {
           <Reveal>
             <Pill>What I do</Pill>
           </Reveal>
-          <MaskHeading className="t-h2 mt-6" lines={['Four ways I help', 'your business grow.']} />
+          <MaskHeading className="t-h2 mt-6" lines={['Four ways I help', 'your brand grow.']} />
           <Reveal delay={0.15}>
             <p className="t-lead mt-5 max-w-[52ch]">
               Pick one, or let me handle all four. Everything is set up around your brand, your offer and the tools you

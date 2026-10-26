@@ -17,60 +17,156 @@ export const CONTACT = {
 };
 
 export const NAV_LINKS = [
-  { id: 'showreel', label: 'Intro' },
+  { id: 'ugc', label: 'UGC ads' },
   { id: 'services', label: 'Services' },
-  { id: 'examples', label: 'Examples' },
+  { id: 'work', label: 'Work' },
   { id: 'process', label: 'Process' },
   { id: 'faq', label: 'FAQ' },
 ];
 
 export const HERO = {
-  badge: 'For real estate teams and growing agencies',
-  lead: "I'm Shripaad. I help you win more clients with websites that bring in enquiries, automations that reply and follow up for you, and videos people actually watch.",
+  badge: 'For brands and online stores',
+  lead: "I'm Shripaad. I make UGC-style video ads, AI product videos, 3D product renders and websites for brands, so you can test fresh ads every week and turn more visitors into buyers.",
 };
 
 /** Sample notifications floating around the hero headline (wide screens only). */
 export const HERO_CARDS = [
-  { icon: 'inbox', title: 'New enquiry', text: 'From your website' },
-  { icon: 'bolt', title: 'Replied in 38 seconds', text: 'By your AI assistant' },
-  { icon: 'calendar', title: 'Viewing booked', text: 'Saturday at 11:00' },
-  { icon: 'play', title: 'New reel ready', text: '30 seconds, for Instagram' },
+  { icon: 'play', title: '5 new ads ready', text: '9:16, for Reels and TikTok' },
+  { icon: 'bolt', title: 'Hook B is winning', text: 'Test three angles at once' },
+  { icon: 'cube', title: '3D render done', text: 'Your product, any angle' },
+  { icon: 'inbox', title: 'New order', text: 'From your website' },
 ] as const;
 
 /** The row of services under the intro video. */
 export const CHIPS = [
-  { icon: 'web', label: 'Website design' },
-  { icon: 'chat', label: 'AI chat and voice agents' },
-  { icon: 'bolt', label: 'Workflow automation' },
-  { icon: 'repeat', label: 'Lead follow-up' },
-  { icon: 'play', label: 'Video editing' },
-  { icon: 'cube', label: '3D walkthroughs' },
+  { icon: 'play', label: 'UGC video ads' },
+  { icon: 'eye', label: 'AI product videos' },
+  { icon: 'cube', label: '3D product renders' },
+  { icon: 'web', label: 'Websites and stores' },
+  { icon: 'chat', label: 'AI chat assistants' },
+  { icon: 'repeat', label: 'Follow-up automation' },
 ] as const;
+
+/** Sample UGC ads shown in phone frames. Files live in public/media/ugc. */
+export const UGC_SAMPLES: { id: string; product: string; angle: string; src: string; poster: string }[] = [];
+
+/** The UGC ad section: the starter offer and how it works. */
+export const UGC = {
+  price: '$50',
+  pack: '5 UGC video ads',
+  includes: [
+    '5 vertical video ads (9:16) for Reels, Stories and TikTok',
+    'A different hook and angle in each one, ready to test',
+    'Bold captions, so they work with the sound off',
+    'Yours to keep and run as often as you like',
+  ],
+  steps: [
+    { title: 'Send me your product', text: 'A link to the product page is enough. No shipping, no samples.' },
+    { title: 'I write the hooks', text: 'Problem, demo, comparison, offer: one angle per ad, written for your customer.' },
+    { title: 'Get your ads in 3 days', text: 'Ready-to-run MP4 files, plus one round of changes.' },
+  ],
+  note: 'The presenters in these ads are made with AI. That is what keeps them fast and affordable. Meta and TikTok ask advertisers to label realistic AI content, and I will show you where to switch that on.',
+};
 
 export const GROWTH = [
   {
-    id: 'seen',
-    title: 'Get seen',
-    text: 'Reels, listing videos, ad designs and 3D walkthroughs that make people stop scrolling and remember your name.',
-    tags: ['Video editing', 'Ad designs', '3D walkthroughs'],
+    id: 'ugc',
+    title: 'UGC-style video ads',
+    text: 'Short vertical ads where a presenter shows your product and talks to camera, so you can test new hooks every week without hiring creators or shipping samples.',
+    tags: ['UGC ads', 'Hooks to test', 'Reels and TikTok'],
   },
   {
     id: 'web',
-    title: 'Turn visitors into enquiries',
-    text: 'A fast, clear website, or a redesign of the one you have, so visitors trust you and know exactly how to get in touch.',
+    title: 'Websites that sell',
+    text: 'A fast, clear website or store, or a redesign of the one you have, so visitors trust your brand and know exactly how to buy.',
     tags: ['New websites', 'Redesigns', 'Landing pages'],
   },
   {
-    id: 'reply',
-    title: 'Reply in seconds, day or night',
-    text: 'Chat, WhatsApp and voice assistants that answer questions, qualify leads and book calls or viewings for you.',
-    tags: ['Chat assistant', 'WhatsApp', 'Voice receptionist'],
+    id: 'render',
+    title: '3D product renders and AI video',
+    text: 'Studio-quality 3D renders of your product from any angle, and AI-made product videos for launches, listings and ads.',
+    tags: ['3D renders', 'Product videos', 'Launch content'],
   },
   {
-    id: 'follow',
-    title: 'Follow-ups that run themselves',
-    text: 'Every lead lands in your CRM, your team gets a heads-up, and quiet leads get a polite nudge until they reply.',
-    tags: ['Lead qualification', 'Follow-ups', 'CRM updates'],
+    id: 'reply',
+    title: 'Replies and follow-ups that run themselves',
+    text: 'Chat and WhatsApp assistants that answer customer questions in seconds, and follow-ups that bring quiet leads back.',
+    tags: ['Chat assistant', 'WhatsApp', 'Follow-ups'],
+  },
+] as const;
+
+/** Recent work, in the Work section. */
+export const WORK = [
+  {
+    id: 'skyline',
+    title: 'Skyline Villas',
+    kind: 'Website, 3D model and AI assistant',
+    text: 'A premium website for a villa developer, with a 3D model buyers can rotate and an assistant that answers price questions.',
+    image: 'img/work/skyline-site.webp',
+    href: 'https://skylinevillas-puce.vercel.app/',
+    cta: 'Open the website',
+    label: 'Website',
+  },
+  {
+    id: 'villa',
+    title: 'Villa turntable',
+    kind: '3D animation',
+    text: 'The Skyline villa model, rendered as a turntable clip for ads and listings.',
+    video: 'media/villa-orbit.mp4',
+    poster: 'img/work/villa-orbit-poster.webp',
+    label: '3D render',
+  },
+] as const;
+
+/** Product renders in the Work gallery. All are concept brands made for the portfolio. */
+export const RENDERS = [
+  {
+    id: 'solenne',
+    name: 'Solenne serum',
+    kind: 'Concept brand',
+    image: 'img/renders/solenne.webp',
+    alt: 'Amber glass serum bottle and jar on stone blocks, striped with window-blind shadows',
+    tone: '#d9c3ad',
+  },
+  {
+    id: 'fuego',
+    name: 'Fuego Lento hot sauce',
+    kind: 'Concept brand',
+    image: 'img/renders/fuego.webp',
+    alt: 'Red hot sauce bottle and two chillies on a cobalt blue backdrop',
+    tone: '#2747a8',
+  },
+  {
+    id: 'ember',
+    name: 'Ember & Oak candle',
+    kind: 'Concept brand',
+    image: 'img/renders/ember.webp',
+    alt: 'Lit candle in an amber glass tumbler with a cream label, on a wooden table',
+    tone: '#3a2a20',
+  },
+  {
+    id: 'tide',
+    name: 'Tidewater soap',
+    kind: 'Concept brand',
+    image: 'img/renders/tide.webp',
+    alt: 'Three bars of soap in cream, sage and terracotta stacked on a wooden soap dish',
+    tone: '#a9b8a7',
+  },
+  {
+    id: 'nova',
+    name: 'NOVA headphones',
+    kind: 'Concept brand',
+    image: 'img/work/nova-hero.webp',
+    alt: 'Black over-ear headphones on a dark background, 3D hero render',
+    tone: '#111216',
+  },
+  {
+    id: 'nova-detail',
+    name: 'NOVA, close-up',
+    kind: 'Concept brand',
+    image: 'img/work/nova-detail.webp',
+    alt: 'Close-up of the NOVA headphone ear cup with its red ring',
+    tone: '#111216',
   },
 ] as const;
 
@@ -128,52 +224,52 @@ export const STEPS = [
   {
     title: 'Get in touch',
     time: 'Day 1',
-    text: "Tell me about your business and goals. I'll look at your website and social pages and suggest where to start.",
+    text: "Tell me about your brand and what you sell. I'll look at your ads, website and social pages and suggest where to start.",
   },
   {
     title: 'Plan and price',
-    time: 'Days 2 to 3',
-    text: "You get a clear plan for what I'll build, the timeline and one fixed price, before any work starts.",
+    time: 'Day 1 to 2',
+    text: "You get a clear plan, the timeline and one fixed price before any work starts. Ad packs start at $50 for 5 ads.",
   },
   {
-    title: 'Build and launch',
-    time: '1 to 4 weeks',
-    text: 'We agree a fixed price. I build, you review, and I launch it connected to the tools your team already uses.',
+    title: 'Make and review',
+    time: '3 days to 4 weeks',
+    text: 'Ads take about 3 days, a website two to four weeks. You review the work and ask for changes before anything goes live.',
   },
   {
-    title: 'Support',
+    title: 'Launch and improve',
     time: 'After launch',
-    text: "Your team gets a short video showing how everything works, and I'm on hand for changes once you're live.",
+    text: "You get the final files or the live site. When you know which ads win, I make more like them.",
   },
 ];
 
 export const FAQS = [
   {
-    q: 'Is it just you?',
-    a: 'Yes. You work directly with me, from the first message to launch. I take on a few projects at a time so each one gets proper attention.',
+    q: 'Are the people in the ads real?',
+    a: 'No. The presenters are made with AI, which is why the ads are fast and affordable. They show and talk about your product, and they never claim to be real customers. Meta and TikTok ask advertisers to label realistic AI content, and I will show you how.',
+  },
+  {
+    q: 'What do you need from me?',
+    a: "A link to your product page, and anything you'd like the ads to say. I take it from there. You don't need to send samples.",
   },
   {
     q: 'What does it cost?',
-    a: "Every project has a fixed price, agreed before I start and based on what you need. Message me with what you have in mind and I'll send you a quote.",
+    a: 'A starter pack of 5 UGC video ads is $50. Websites, 3D renders and assistants are priced per project, with one fixed price agreed before I start.',
   },
   {
     q: 'How long does it take?',
-    a: 'Most assistants and automations go live within one to two weeks. A full website takes two to four weeks.',
+    a: 'About 3 days for an ad pack, one to two weeks for 3D renders or an assistant, and two to four weeks for a full website.',
   },
   {
-    q: 'Will it work with what we already use?',
-    a: "Usually, yes. I connect to the tools you already have, like Gmail or Outlook, WhatsApp Business, Google Calendar, your CRM or a spreadsheet, so your team doesn't have to change how it works.",
+    q: 'Can I run the ads on Facebook, Instagram and TikTok?',
+    a: 'Yes. You get vertical MP4 files sized for Reels, Stories and TikTok, and you own them.',
+  },
+  {
+    q: 'Is it just you?',
+    a: 'Yes. You work directly with me, from the first message to the final files. I take on a few projects at a time so each one gets proper attention.',
   },
   {
     q: 'What time zone are you in?',
-    a: "I'm in India (UTC+5:30) and keep flexible hours, so I can take calls during your working day in the UAE, UK, US or Australia.",
-  },
-  {
-    q: 'What if I want changes?',
-    a: 'You review the work at each stage, and I make the changes before anything goes live.',
-  },
-  {
-    q: 'Who do you work with?',
-    a: 'Mostly real estate teams and small to medium agencies. The same work suits most businesses that get enquiries online and want to answer them faster.',
+    a: "I'm in India (UTC+5:30) and keep flexible hours, so I can take calls during your working day in the US, UK, UAE or Australia.",
   },
 ];

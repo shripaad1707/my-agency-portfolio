@@ -193,12 +193,12 @@ export default function Examples() {
           </Reveal>
           <MaskHeading
             className="t-h2 mt-6"
-            lines={['What happens after', 'someone enquires.']}
-            mobileLines={['What happens', 'after someone', 'enquires.']}
+            lines={['Assistants that answer', 'your customers for you.']}
+            mobileLines={['Assistants that', 'answer your', 'customers for you.']}
           />
           <Reveal delay={0.15}>
             <p className="t-lead mt-5 max-w-[50ch]">
-              Choose an example to watch it play. Each one is set up around your business and the tools you already use.
+              These examples were built for a property business. The same setup answers product questions, order updates and returns for an online store.
             </p>
           </Reveal>
         </div>

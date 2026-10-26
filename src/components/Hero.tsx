@@ -95,8 +95,8 @@ export default function Hero({ onContact }: { onContact: () => void }) {
             immediate
             delay={0.45}
             className="t-hero mt-7"
-            lines={['Helping your business', [{ g: 'get seen and sell more.' }]]}
-            mobileLines={['Helping your', ['business ', { g: 'get seen' }], [{ g: 'and sell more.' }]]}
+            lines={['Helping your brand', [{ g: 'get seen and sell more.' }]]}
+            mobileLines={['Helping your', ['brand ', { g: 'get seen' }], [{ g: 'and sell more.' }]]}
           />
 
           <motion.p className="t-lead mt-7 max-w-[50ch]" {...fade(0.95)}>
@@ -104,8 +104,8 @@ export default function Hero({ onContact }: { onContact: () => void }) {
           </motion.p>
 
           <motion.div className="mt-9 flex w-full flex-col items-stretch justify-center gap-3 sm:w-auto sm:flex-row sm:items-center" {...fade(1.1)}>
-            <button type="button" className="btn btn-solid" onClick={onContact}>
-              Contact me <Arrow />
+            <button type="button" className="btn btn-solid" onClick={() => scrollToId('ugc')}>
+              See sample ads <Arrow />
             </button>
             <button type="button" className="btn btn-outline" onClick={watch}>
               <svg width="10" height="12" viewBox="0 0 10 12" aria-hidden="true" className="text-accent">

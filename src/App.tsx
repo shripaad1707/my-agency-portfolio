@@ -10,7 +10,9 @@ import Hero from './components/Hero';
 import Nav from './components/Nav';
 import Process from './components/Process';
 import Showreel from './components/Showreel';
+import Ugc from './components/Ugc';
 import WhyMe from './components/WhyMe';
+import Work from './components/Work';
 import { startSmoothScroll } from './lib/motion';
 
 export default function App() {
@@ -26,7 +28,9 @@ export default function App() {
       <main>
         <Hero onContact={openContact} />
         <Showreel />
+        <Ugc onContact={openContact} />
         <Growth />
+        <Work onContact={openContact} />
         <Examples />
         <WhyMe />
         <Process />
