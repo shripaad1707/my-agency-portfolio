@@ -26,7 +26,7 @@ export const NAV_LINKS = [
 
 export const HERO = {
   badge: 'For brands and online stores',
-  lead: "I'm Shripaad. I make UGC-style video ads, AI product videos, 3D product renders and websites for brands, so you can test fresh ads every week and turn more visitors into buyers.",
+  lead: "I'm Shripaad. I make UGC-style video ads, AI product videos, 3D product renders, websites and web apps for brands, so you can test fresh ads every week and turn more visitors into buyers.",
 };
 
 /** Sample notifications floating around the hero headline (wide screens only). */
@@ -42,7 +42,7 @@ export const CHIPS = [
   { icon: 'play', label: 'UGC video ads' },
   { icon: 'eye', label: 'AI product videos' },
   { icon: 'cube', label: '3D product renders' },
-  { icon: 'web', label: 'Websites and stores' },
+  { icon: 'web', label: 'Websites and web apps' },
   { icon: 'chat', label: 'AI chat assistants' },
   { icon: 'repeat', label: 'Follow-up automation' },
 ] as const;
@@ -77,9 +77,9 @@ export const GROWTH = [
   },
   {
     id: 'web',
-    title: 'Websites that sell',
-    text: 'A fast, clear website or store, or a redesign of the one you have, so visitors trust your brand and know exactly how to buy.',
-    tags: ['New websites', 'Redesigns', 'Landing pages'],
+    title: 'Websites and web apps',
+    text: 'A fast, clear website or store, a redesign of the one you have, or a custom web app with sign-in and AI built in.',
+    tags: ['New websites', 'Web apps', 'Landing pages'],
   },
   {
     id: 'render',
@@ -98,6 +98,19 @@ export const GROWTH = [
 /** Recent work, in the Work section. */
 export const WORK = [
   {
+    id: 'relay',
+    title: 'Relay.ai',
+    kind: 'AI web app, built end to end',
+    text: 'An AI assistant for work. It turns meetings and email into tasks, drafts replies and books meetings, and nothing is sent until you approve it.',
+    tags: ['Next.js', 'Supabase', 'Gemini AI', 'Gmail and Calendar'],
+    video: 'media/relay-tour.mp4',
+    poster: 'img/work/relay-poster.webp',
+    href: 'https://relay-ai-ivory-chi.vercel.app/',
+    host: 'relay-ai-ivory-chi.vercel.app',
+    cta: 'Open the live app',
+    label: 'Web app',
+  },
+  {
     id: 'skyline',
     title: 'Skyline Villas',
     kind: 'Website, 3D model and AI assistant',
@@ -105,7 +118,7 @@ export const WORK = [
     image: 'img/work/skyline-site.webp',
     href: 'https://skylinevillas-puce.vercel.app/',
     cta: 'Open the website',
-    label: 'Website',
+    label: 'Real estate website',
   },
   {
     id: 'villa',

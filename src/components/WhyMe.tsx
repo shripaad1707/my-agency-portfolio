@@ -67,7 +67,7 @@ export default function WhyMe() {
           <Reveal className="mt-6 grid gap-3 text-[14.5px] sm:grid-cols-2" delay={0.1}>
             <p className="rounded-[16px] bg-accent-soft px-4 py-3 text-ink/85">
               <span className="font-semibold text-ink">A good fit:</span> small brands and online stores, especially ones
-              already running ads, plus real estate teams and agencies.
+              already running ads, plus startups that need a web app, and real estate teams.
             </p>
             <p className="rounded-[16px] border border-line bg-white/80 px-4 py-3 text-slate">
               <span className="font-semibold text-ink">Not a good fit:</span> large enterprise systems or mobile apps.

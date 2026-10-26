@@ -52,7 +52,7 @@ function RenderTile({ item, index }: { item: (typeof RENDERS)[number]; index: nu
 }
 
 export default function Work({ onContact }: { onContact: () => void }) {
-  const [site, villa] = WORK;
+  const [relay, site, villa] = WORK;
   return (
     <section id="work" className="night-band relative overflow-hidden py-24 text-white lg:py-32">
       <div className="wrap relative">
@@ -70,14 +70,50 @@ export default function Work({ onContact }: { onContact: () => void }) {
           />
           <Reveal delay={0.15}>
             <p className="mt-5 max-w-[56ch] text-[clamp(1rem,0.35vw+0.94rem,1.15rem)] leading-[1.7] text-white/70">
-              Skyline Villas is a website I designed and built. The product shots are concept brands I created in 3D,
-              to show the look your products could have.
+              Relay.ai is an AI web app and Skyline Villas a real estate website, both designed and built by me. The
+              product shots are concept brands I created in 3D, to show the look your products could have.
             </p>
           </Reveal>
         </div>
 
+        {/* Relay.ai: an AI web app, shown as a browser window playing a tour of the live site */}
+        <Reveal className="mt-16 lg:mt-20">
+          <article className="dark-card grid overflow-hidden p-1.5 lg:grid-cols-12">
+            <div className="overflow-hidden rounded-[18px] border border-white/10 bg-[#0b0d18] lg:col-span-8">
+              <div className="flex items-center gap-3 border-b border-white/10 px-4 py-2.5" aria-hidden="true">
+                <span className="flex gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
+                </span>
+                <span className="mx-auto truncate rounded-md bg-white/[0.06] px-3 py-1 text-[12px] text-white/55">{relay.host}</span>
+                <span className="w-[42px]" />
+              </div>
+              <div className="relative aspect-[834/454] bg-white">
+                <Loop src={relay.video} poster={relay.poster} label="Tour of the Relay.ai website, scrolling from the top of the page to the footer" />
+              </div>
+            </div>
+            <div className="flex flex-col justify-center px-5 pt-7 pb-6 sm:px-7 lg:col-span-4 lg:px-8">
+              <span className="self-start rounded-full bg-white/[0.08] px-3 py-1 text-[12.5px] font-medium text-white/85">{relay.label}</span>
+              <p className="mt-5 text-[13.5px] font-medium text-[#a5b4fc]">{relay.kind}</p>
+              <h3 className="mt-1 text-[clamp(1.5rem,2vw,1.9rem)] leading-[1.15] font-semibold tracking-[-0.03em]">{relay.title}</h3>
+              <p className="mt-3 text-[15px] leading-[1.7] text-white/65">{relay.text}</p>
+              <ul className="mt-5 flex flex-wrap gap-2">
+                {relay.tags.map((t) => (
+                  <li key={t} className="rounded-full border border-white/12 px-3 py-1 text-[12.5px] text-white/70">
+                    {t}
+                  </li>
+                ))}
+              </ul>
+              <a href={relay.href} target="_blank" rel="noreferrer" className="btn btn-light mt-7 self-start">
+                {relay.cta} <Arrow />
+              </a>
+            </div>
+          </article>
+        </Reveal>
+
         {/* Skyline Villas: the website, the mobile view and the 3D model */}
-        <div className="mt-16 grid gap-5 lg:mt-20 lg:grid-cols-12">
+        <div className="mt-5 grid gap-5 lg:grid-cols-12">
           <Reveal className="lg:col-span-8">
             <article className="dark-card zoom flex h-full flex-col overflow-hidden p-1.5">
               <div className="relative aspect-[16/10] overflow-hidden rounded-[18px] bg-[#1b1e2e]">
