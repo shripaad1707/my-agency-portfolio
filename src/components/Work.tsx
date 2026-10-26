@@ -159,22 +159,13 @@ export default function Work({ onContact }: { onContact: () => void }) {
             </article>
           </Reveal>
 
-          <Reveal className="lg:col-span-7">
-            <figure className="dark-card zoom h-full overflow-hidden p-1.5">
-              <div className="relative aspect-[3/2] overflow-hidden rounded-[18px] bg-[#1b1e2e] lg:aspect-auto lg:h-full lg:min-h-[340px]">
-                <img src={asset('img/work/skyline-pool.webp')} alt="Pool terrace of a Skyline villa at sunset" loading="lazy" className="zoom-img h-full w-full object-cover" />
-                <Tag>Skyline Villas</Tag>
-              </div>
-            </figure>
-          </Reveal>
-
-          <Reveal className="lg:col-span-5" delay={0.1}>
-            <article className="dark-card flex h-full flex-col overflow-hidden p-1.5">
-              <div className="relative aspect-[16/11] overflow-hidden rounded-[18px] bg-[#0b0d18]">
+          <Reveal className="lg:col-span-12">
+            <article className="dark-card grid overflow-hidden p-1.5 lg:grid-cols-12">
+              <div className="relative aspect-[16/11] overflow-hidden rounded-[18px] bg-[#0b0d18] lg:col-span-6 lg:aspect-[4/3]">
                 <Loop src={villa.video} poster={villa.poster} label="3D villa model turning slowly" />
                 <Tag>{villa.label}</Tag>
               </div>
-              <div className="px-5 pt-6 pb-5 sm:px-6">
+              <div className="flex flex-col justify-center px-5 pt-6 pb-5 sm:px-6 lg:col-span-6 lg:px-12">
                 <p className="text-[13.5px] font-medium text-[#a5b4fc]">{villa.kind}</p>
                 <h3 className="t-h3 mt-1">{villa.title}</h3>
                 <p className="mt-2 max-w-[46ch] text-[15px] text-white/65">{villa.text}</p>

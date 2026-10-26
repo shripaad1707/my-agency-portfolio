@@ -121,7 +121,7 @@ export default function Ugc({ onContact }: { onContact: () => void }) {
           </div>
         )}
         {UGC_SAMPLES.length > 0 && (
-          <p className="t-caption mt-6 text-center">Sample ads for concept brands, made with AI</p>
+          <p className="t-caption mt-6 text-center">Sample ads I made with AI for real products, to show the style. These brands are not clients.</p>
         )}
 
         <div className="mx-auto mt-16 grid max-w-[1080px] gap-5 lg:mt-20 lg:grid-cols-12">
