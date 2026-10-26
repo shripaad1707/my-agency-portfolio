@@ -111,8 +111,8 @@ export default function Ugc({ onContact }: { onContact: () => void }) {
 
         {UGC_SAMPLES.length > 0 && (
           <div
-            className="-mx-5 mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 md:-mx-10 md:px-10 lg:mx-auto lg:grid lg:max-w-[1000px] lg:snap-none lg:overflow-visible lg:px-0 lg:pb-0"
-            style={{ gridTemplateColumns: `repeat(${Math.min(UGC_SAMPLES.length, 3)}, minmax(0, 1fr))` }}
+            className="-mx-5 mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 md:-mx-10 md:px-10 lg:mx-auto lg:grid lg:max-w-[1080px] lg:snap-none lg:overflow-visible lg:px-0 lg:pb-0"
+            style={{ gridTemplateColumns: `repeat(${Math.min(UGC_SAMPLES.length, 4)}, minmax(0, 1fr))` }}
             data-lenis-prevent-wheel
           >
             {UGC_SAMPLES.map((s, i) => (
