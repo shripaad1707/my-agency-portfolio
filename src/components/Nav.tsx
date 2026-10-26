@@ -1,5 +1,5 @@
 import { useEffect, useState, type MouseEvent } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion, useScroll } from 'motion/react';
 import { CONTACT, NAV_LINKS } from '../content';
 import { EASE, pauseScroll, resumeScroll, scrollToId } from '../lib/motion';
 
@@ -17,13 +17,38 @@ export function Logo({ className = '' }: { className?: string }) {
   );
 }
 
+/** Which nav section is crossing the middle of the screen. */
+function useActiveSection(ids: string[]) {
+  const [active, setActive] = useState<string | null>(null);
+  useEffect(() => {
+    const seen = new Map<string, boolean>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => seen.set(e.target.id, e.isIntersecting));
+        setActive(ids.find((id) => seen.get(id)) ?? null);
+      },
+      { rootMargin: '-45% 0px -50% 0px' },
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
+    return () => io.disconnect();
+  }, [ids]);
+  return active;
+}
+
+const NAV_IDS = NAV_LINKS.map((l) => l.id);
+
 export default function Nav({ onContact }: { onContact: () => void }) {
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
+  const active = useActiveSection(NAV_IDS);
+  const { scrollYProgress } = useScroll();
 
   useEffect(() => {
-    const onScroll = () => setSolid(window.scrollY > 60);
+    const onScroll = () => setSolid(window.scrollY > 40);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -50,45 +75,77 @@ export default function Nav({ onContact }: { onContact: () => void }) {
 
   return (
     <>
+      {/* Reading progress, drawn like a playhead along the top edge */}
+      <motion.div
+        aria-hidden="true"
+        className="fixed inset-x-0 top-0 z-[60] h-[2px] origin-left bg-gradient-to-r from-accent via-accent-2 to-sky"
+        style={{ scaleX: scrollYProgress }}
+      />
+
       <motion.header
         initial={reduce ? false : { y: -12, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.9, ease: EASE, delay: 0.2 }}
-        style={{ paddingTop: 'env(safe-area-inset-top, 0px)', height: 'calc(72px + env(safe-area-inset-top, 0px))' }}
-        className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color] duration-700 ease-arch ${
-          solid && !open ? 'border-ink/10 bg-white/80 backdrop-blur-md' : 'border-transparent bg-transparent'
-        }`}
+        style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+        className="fixed inset-x-0 top-0 z-50"
       >
-        <div className="wrap flex h-full items-center justify-between gap-6">
-          <a href="#top" onClick={go('top')} aria-label={`${CONTACT.name}, back to top`}>
-            <Logo />
-          </a>
+        <div className="wrap max-w-[1280px] px-3 sm:px-5 md:px-6">
+          <div
+            className={`mt-2.5 flex h-[60px] items-center justify-between gap-6 rounded-full border pr-2 pl-4 transition-[background-color,border-color,box-shadow] duration-700 ease-arch sm:pl-5 ${
+              solid && !open
+                ? 'border-ink/[0.08] bg-white/75 shadow-[0_12px_40px_-18px_rgba(30,27,75,0.28)] backdrop-blur-xl'
+                : 'border-transparent bg-transparent'
+            }`}
+          >
+            <a href="#top" onClick={go('top')} aria-label={`${CONTACT.name}, back to top`}>
+              <Logo />
+            </a>
 
-          <nav aria-label="Main" className="hidden items-center gap-9 lg:flex">
-            {NAV_LINKS.map((link) => (
-              <a key={link.id} href={`#${link.id}`} onClick={go(link.id)} className="nav-link text-[14px] text-ink/80 hover:text-ink">
-                {link.label}
-              </a>
-            ))}
-          </nav>
+            <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
+              {NAV_LINKS.map((link) => {
+                const on = active === link.id;
+                return (
+                  <a
+                    key={link.id}
+                    href={`#${link.id}`}
+                    onClick={go(link.id)}
+                    aria-current={on ? 'true' : undefined}
+                    className={`relative isolate rounded-full px-4 py-2 text-[14px] transition-colors duration-500 ease-arch ${
+                      on ? 'text-ink' : 'text-ink/70 hover:text-ink'
+                    }`}
+                  >
+                    {on && (
+                      <motion.span
+                        layoutId="nav-active"
+                        aria-hidden="true"
+                        className="absolute inset-0 -z-10 rounded-full bg-ink/[0.06]"
+                        transition={{ duration: 0.6, ease: EASE }}
+                      />
+                    )}
+                    {link.label}
+                  </a>
+                );
+              })}
+            </nav>
 
-          <div className="flex items-center gap-4">
-            <button type="button" onClick={onContact} className="btn btn-solid hidden h-10 px-5 text-[14px] sm:inline-flex">
-              Contact me
-            </button>
-            <button
-              type="button"
-              className="-mr-2 grid h-11 w-11 place-items-center lg:hidden"
-              aria-expanded={open}
-              aria-controls="mobile-menu"
-              aria-label={open ? 'Close menu' : 'Open menu'}
-              onClick={() => setOpen((v) => !v)}
-            >
-              <span className={`burger ${open ? 'is-open' : ''}`}>
-                <span />
-                <span />
-              </span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button type="button" onClick={onContact} className="btn btn-solid hidden h-11 px-5 text-[14px] sm:inline-flex">
+                Contact me
+              </button>
+              <button
+                type="button"
+                className="grid h-11 w-11 place-items-center rounded-full lg:hidden"
+                aria-expanded={open}
+                aria-controls="mobile-menu"
+                aria-label={open ? 'Close menu' : 'Open menu'}
+                onClick={() => setOpen((v) => !v)}
+              >
+                <span className={`burger ${open ? 'is-open' : ''}`}>
+                  <span />
+                  <span />
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </motion.header>

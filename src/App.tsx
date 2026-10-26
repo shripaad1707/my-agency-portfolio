@@ -13,7 +13,7 @@ import Showreel from './components/Showreel';
 import Ugc from './components/Ugc';
 import WhyMe from './components/WhyMe';
 import Work from './components/Work';
-import { startSmoothScroll } from './lib/motion';
+import { startSmoothScroll, startSpotlight } from './lib/motion';
 
 export default function App() {
   const [contactOpen, setContactOpen] = useState(false);
@@ -21,6 +21,7 @@ export default function App() {
   const closeContact = useCallback(() => setContactOpen(false), []);
 
   useEffect(() => startSmoothScroll(), []);
+  useEffect(() => startSpotlight(), []);
 
   return (
     <MotionConfig reducedMotion="user">
@@ -37,7 +38,7 @@ export default function App() {
         <Faq />
         <FinalCta onContact={openContact} />
       </main>
-      <Footer />
+      <Footer onContact={openContact} />
       <ContactDrawer open={contactOpen} onClose={closeContact} />
     </MotionConfig>
   );

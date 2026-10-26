@@ -257,7 +257,7 @@ function GrowthCard({ index }: { index: number }) {
 
   return (
     <Reveal className={SPANS[index]} delay={(index % 2) * 0.1}>
-      <article className="card zoom flex h-full flex-col overflow-hidden p-2">
+      <article className="card spot zoom flex h-full flex-col overflow-hidden p-2">
         <div ref={ref} className="panel relative h-[250px] overflow-hidden rounded-[18px] sm:h-[270px]">
           <div className="zoom-img absolute inset-0">
             <Visual start={seen} />
@@ -283,13 +283,15 @@ export default function Growth() {
   return (
     <section id="services" className="glow-bg py-20 lg:py-28">
       <div className="wrap">
-        <div className="mx-auto flex max-w-[760px] flex-col items-center text-center">
-          <Reveal>
-            <Pill>What I do</Pill>
-          </Reveal>
-          <MaskHeading className="t-h2 mt-6" lines={['Four ways I help', 'your brand grow.']} />
-          <Reveal delay={0.15}>
-            <p className="t-lead mt-5 max-w-[52ch]">
+        <div className="grid items-end gap-6 lg:grid-cols-12 lg:gap-10">
+          <div className="lg:col-span-7">
+            <Reveal>
+              <Pill>What I do</Pill>
+            </Reveal>
+            <MaskHeading className="t-h2 mt-6" lines={['Four ways I help', 'your brand grow.']} />
+          </div>
+          <Reveal delay={0.15} className="lg:col-span-5">
+            <p className="t-lead max-w-[46ch]">
               Pick one, or let me handle all four. Everything is set up around your brand, your offer and the tools you
               already use.
             </p>

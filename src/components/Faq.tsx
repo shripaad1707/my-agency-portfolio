@@ -9,66 +9,72 @@ export default function Faq() {
 
   return (
     <section id="faq" className="glow-bg glow-flip py-20 lg:py-28">
-      <div className="wrap">
-        <div className="mx-auto flex max-w-[760px] flex-col items-center text-center">
-          <Reveal>
-            <Pill>FAQ</Pill>
-          </Reveal>
-          <MaskHeading className="t-h2 mt-6" lines={['Questions people', 'ask first.']} mobileLines={['Questions', 'people ask first.']} />
+      <div className="wrap grid gap-10 lg:grid-cols-12 lg:gap-16">
+        <div className="lg:col-span-5">
+          <div className="lg:sticky lg:top-[128px]">
+            <Reveal>
+              <Pill>FAQ</Pill>
+            </Reveal>
+            <MaskHeading className="t-h2 mt-6" lines={['Questions people', 'ask first.']} mobileLines={['Questions', 'people ask first.']} />
+            <Reveal delay={0.15}>
+              <p className="t-lead mt-5 max-w-[40ch]">
+                Something else on your mind? Send me a message and I'll reply within one working day.
+              </p>
+            </Reveal>
+            <Reveal delay={0.2}>
+              <a href={CONTACT.whatsapp} target="_blank" rel="noreferrer" className="btn btn-outline mt-8">
+                Ask me on WhatsApp <Arrow />
+              </a>
+            </Reveal>
+          </div>
         </div>
 
-        <div className="mx-auto mt-12 max-w-[860px] space-y-3 lg:mt-14">
-          {FAQS.map((item, i) => {
-            const on = open === i;
-            return (
-              <div
-                key={item.q}
-                className={`rounded-[20px] border bg-white transition-[border-color,box-shadow] duration-500 ease-arch ${
-                  on
-                    ? 'border-accent/20 shadow-[0_28px_60px_-30px_rgba(79,70,229,0.35)]'
-                    : 'border-line shadow-[0_10px_30px_-24px_rgba(79,70,229,0.3)]'
-                }`}
-              >
-                <h3>
-                  <button
-                    type="button"
-                    id={`faq-q-${i}`}
-                    aria-expanded={on}
-                    aria-controls={`faq-a-${i}`}
-                    onClick={() => setOpen(on ? -1 : i)}
-                    className="flex w-full items-center justify-between gap-6 px-5 py-5 text-left sm:px-6"
-                  >
-                    <span className="text-[17px] font-semibold tracking-[-0.02em]">{item.q}</span>
-                    <span className={`plus ${on ? 'is-open' : ''}`} aria-hidden="true" />
-                  </button>
-                </h3>
-                <AnimatePresence initial={false}>
-                  {on && (
-                    <motion.div
-                      key="answer"
-                      id={`faq-a-${i}`}
-                      role="region"
-                      aria-labelledby={`faq-q-${i}`}
-                      className="overflow-hidden"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.6, ease: EASE }}
+        <Reveal className="lg:col-span-7">
+          <div className="card divide-y divide-line overflow-hidden">
+            {FAQS.map((item, i) => {
+              const on = open === i;
+              return (
+                <div key={item.q} className={`transition-colors duration-500 ease-arch ${on ? 'bg-accent-soft/40' : 'bg-white'}`}>
+                  <h3>
+                    <button
+                      type="button"
+                      id={`faq-q-${i}`}
+                      aria-expanded={on}
+                      aria-controls={`faq-a-${i}`}
+                      onClick={() => setOpen(on ? -1 : i)}
+                      className="flex w-full items-center justify-between gap-6 px-5 py-5 text-left sm:px-7 sm:py-6"
                     >
-                      <p className="max-w-[62ch] px-5 pb-6 text-[15px] text-slate sm:px-6">{item.a}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
-        </div>
-
-        <Reveal className="mt-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-[15px] text-slate">
-          <span>Have a different question?</span>
-          <a href={CONTACT.whatsapp} target="_blank" rel="noreferrer" className="link-btn text-ink">
-            Ask me on WhatsApp <Arrow />
-          </a>
+                      <span className="text-[16.5px] font-semibold tracking-[-0.02em] sm:text-[17px]">{item.q}</span>
+                      <span
+                        className={`grid h-8 w-8 shrink-0 place-items-center rounded-full border transition-[background-color,border-color,color] duration-500 ease-arch ${
+                          on ? 'border-accent bg-accent text-white' : 'border-line bg-white text-ink'
+                        }`}
+                      >
+                        <span className={`plus ${on ? 'is-open' : ''}`} aria-hidden="true" />
+                      </span>
+                    </button>
+                  </h3>
+                  <AnimatePresence initial={false}>
+                    {on && (
+                      <motion.div
+                        key="answer"
+                        id={`faq-a-${i}`}
+                        role="region"
+                        aria-labelledby={`faq-q-${i}`}
+                        className="overflow-hidden"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.6, ease: EASE }}
+                      >
+                        <p className="max-w-[60ch] px-5 pb-6 text-[15px] text-slate sm:px-7">{item.a}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
         </Reveal>
       </div>
     </section>

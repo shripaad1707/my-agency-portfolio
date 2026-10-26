@@ -29,6 +29,9 @@ export const HERO = {
   lead: "I'm Shripaad. I make UGC-style video ads, AI product videos, 3D product renders, websites and web apps for brands, so you can test fresh ads every week and turn more visitors into buyers.",
 };
 
+/** Three short promises under the hero buttons. */
+export const HERO_POINTS = ['Fixed price before I start', 'First ads in 3 days', 'Reply within one working day'];
+
 /** Sample notifications floating around the hero headline (wide screens only). */
 export const HERO_CARDS = [
   { icon: 'play', title: '5 new ads ready', text: '9:16, for Reels and TikTok' },

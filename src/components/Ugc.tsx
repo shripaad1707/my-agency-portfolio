@@ -1,16 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react';
 import { UGC, UGC_SAMPLES } from '../content';
-import { EASE, asset } from '../lib/motion';
+import { EASE, asset, useMediaQuery, usePauseOffscreen } from '../lib/motion';
 import { Arrow, Icon, MaskHeading, Pill, Reveal } from './ui';
+
+// On wide screens the phones sit in a gentle wave and drift at different speeds as you scroll.
+const WAVE = [
+  { offset: 36, drift: 34 },
+  { offset: 0, drift: 64 },
+  { offset: 52, drift: 42 },
+  { offset: 12, drift: 72 },
+];
 
 type Sample = (typeof UGC_SAMPLES)[number];
 
 /** One sample ad in a phone frame. Plays muted while on screen; tap for sound. */
-function Phone({ sample, index }: { sample: Sample; index: number }) {
+function Phone({ sample, index, progress, wave }: { sample: Sample; index: number; progress: MotionValue<number>; wave: boolean }) {
   const ref = useRef<HTMLVideoElement>(null);
   const reduce = useReducedMotion();
   const [sound, setSound] = useState(false);
+  const w = WAVE[index % WAVE.length];
+  const drift = useTransform(progress, [0, 1], [w.drift, -w.drift]);
 
   useEffect(() => {
     const v = ref.current;
@@ -48,7 +58,12 @@ function Phone({ sample, index }: { sample: Sample; index: number }) {
       viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 1.3, ease: EASE, delay: index * 0.08 }}
     >
-      <div className="relative aspect-[9/16] overflow-hidden rounded-[30px] border-[6px] border-night bg-night shadow-[0_30px_70px_-30px_rgba(14,17,33,0.55)]">
+      <motion.div style={wave && !reduce ? { y: drift, marginTop: w.offset } : undefined} className="group">
+      <div className="relative aspect-[9/16] overflow-hidden rounded-[30px] border-[6px] border-night bg-night shadow-[0_30px_70px_-30px_rgba(14,17,33,0.55)] transition-[transform,box-shadow] duration-700 ease-arch group-hover:-translate-y-1.5 group-hover:shadow-[0_44px_80px_-30px_rgba(79,70,229,0.55)]">
+        <span aria-hidden="true" className="pointer-events-none absolute top-3 left-3 z-10 flex items-center gap-1.5 rounded-full bg-night/55 px-2 py-1 text-[10.5px] font-semibold tracking-[0.02em] text-white backdrop-blur-sm">
+          <span className="live-dot h-1.5 w-1.5" style={{ ['--dot' as string]: '#ff5a5f' }} />
+          Ad {index + 1}
+        </span>
         <video
           ref={ref}
           data-ugc
@@ -85,11 +100,62 @@ function Phone({ sample, index }: { sample: Sample; index: number }) {
         <span className="block text-[15px] font-semibold tracking-[-0.01em]">{sample.product}</span>
         <span className="block text-[13.5px] text-slate">{sample.angle}</span>
       </figcaption>
+      </motion.div>
     </motion.figure>
   );
 }
 
+/** The three steps, joined by a line that fills in as you scroll past. */
+function Steps() {
+  const ref = useRef<HTMLOListElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.8', 'end 0.55'] });
+  const [reached, setReached] = useState(reduce ? UGC.steps.length : 0);
+  useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    if (!reduce) setReached(Math.min(UGC.steps.length, Math.floor(v * UGC.steps.length + 0.35)));
+  });
+
+  return (
+    <Reveal className="card spot p-6 sm:p-8">
+      <ol ref={ref} className="relative space-y-7">
+        <span aria-hidden="true" className="absolute top-5 bottom-5 left-[19px] w-px bg-line" />
+        <motion.span
+          aria-hidden="true"
+          className="absolute top-5 bottom-5 left-[19px] w-px origin-top bg-gradient-to-b from-accent via-accent-2 to-sky"
+          style={{ scaleY: reduce ? 1 : scrollYProgress }}
+        />
+        {UGC.steps.map((step, i) => {
+          const on = i < reached;
+          return (
+            <li key={step.title} className="relative flex gap-5">
+              <span
+                className={`tabular relative z-10 grid h-10 w-10 shrink-0 place-items-center rounded-full border text-[14px] font-semibold transition-[background-color,border-color,color,box-shadow] duration-700 ease-arch ${
+                  on
+                    ? 'border-transparent bg-accent text-white shadow-[0_8px_22px_-8px_rgba(79,70,229,0.8)]'
+                    : 'border-line bg-white text-slate'
+                }`}
+              >
+                {i + 1}
+              </span>
+              <span className="pt-1.5">
+                <span className="block text-[16px] font-semibold tracking-[-0.015em]">{step.title}</span>
+                <span className="mt-1 block text-[14.5px] text-slate">{step.text}</span>
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </Reveal>
+  );
+}
+
 export default function Ugc({ onContact }: { onContact: () => void }) {
+  const gridRef = useRef<HTMLDivElement>(null);
+  const offerRef = useRef<HTMLDivElement>(null);
+  const wide = useMediaQuery('(min-width: 1024px)');
+  const { scrollYProgress } = useScroll({ target: gridRef, offset: ['start end', 'end start'] });
+  usePauseOffscreen(offerRef);
+
   return (
     <section id="ugc" className="glow-bg py-20 lg:py-28">
       <div className="wrap">
@@ -111,12 +177,13 @@ export default function Ugc({ onContact }: { onContact: () => void }) {
 
         {UGC_SAMPLES.length > 0 && (
           <div
-            className="-mx-5 mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 md:-mx-10 md:px-10 lg:mx-auto lg:grid lg:max-w-[1080px] lg:snap-none lg:overflow-visible lg:px-0 lg:pb-0"
+            ref={gridRef}
+            className="-mx-5 mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 md:-mx-10 md:px-10 lg:mx-auto lg:grid lg:max-w-[1080px] lg:snap-none lg:items-start lg:overflow-visible lg:px-0 lg:pb-0"
             style={{ gridTemplateColumns: `repeat(${Math.min(UGC_SAMPLES.length, 4)}, minmax(0, 1fr))` }}
             data-lenis-prevent-wheel
           >
             {UGC_SAMPLES.map((s, i) => (
-              <Phone key={s.id} sample={s} index={i} />
+              <Phone key={s.id} sample={s} index={i} progress={scrollYProgress} wave={wide} />
             ))}
           </div>
         )}
@@ -125,9 +192,14 @@ export default function Ugc({ onContact }: { onContact: () => void }) {
         )}
 
         <div className="mx-auto mt-16 grid max-w-[1080px] gap-5 lg:mt-20 lg:grid-cols-12">
-          <Reveal className="card flex flex-col p-7 sm:p-9 lg:col-span-5">
-            <p className="text-[14px] font-medium text-accent">Starter pack</p>
-            <p className="mt-3 flex items-baseline gap-3">
+          <Reveal className="lg:col-span-5">
+            <div ref={offerRef} className="beam-border h-full">
+            <div className="beam-inner flex h-full flex-col p-7 sm:p-9">
+            <p className="flex items-center justify-between gap-3">
+              <span className="text-[14px] font-medium text-accent">Starter pack</span>
+              <span className="rounded-full bg-accent-soft px-3 py-1 text-[12px] font-medium text-accent">Delivered in 3 days</span>
+            </p>
+            <p className="mt-4 flex items-baseline gap-3">
               <span className="tabular text-[56px] leading-none font-semibold tracking-[-0.04em]">{UGC.price}</span>
               <span className="text-[17px] text-slate">for {UGC.pack}</span>
             </p>
@@ -141,25 +213,15 @@ export default function Ugc({ onContact }: { onContact: () => void }) {
                 </li>
               ))}
             </ul>
-            <button type="button" className="btn btn-solid mt-9 self-start" onClick={onContact}>
+            <button type="button" className="btn btn-solid btn-glow mt-9 self-start" onClick={onContact}>
               Get your 5 ads <Arrow />
             </button>
+            </div>
+            </div>
           </Reveal>
 
           <div className="flex flex-col gap-5 lg:col-span-7">
-            <ol className="grid gap-5 sm:grid-cols-3 lg:grid-cols-1">
-              {UGC.steps.map((step, i) => (
-                <Reveal key={step.title} as="li" delay={0.05 * i} className="card flex gap-4 p-6">
-                  <span className="tabular grid h-9 w-9 shrink-0 place-items-center rounded-full bg-accent text-[14px] font-semibold text-white">
-                    {i + 1}
-                  </span>
-                  <span>
-                    <span className="block text-[16px] font-semibold tracking-[-0.015em]">{step.title}</span>
-                    <span className="mt-1 block text-[14.5px] text-slate">{step.text}</span>
-                  </span>
-                </Reveal>
-              ))}
-            </ol>
+            <Steps />
             <Reveal delay={0.15}>
               <p className="rounded-[18px] border border-line bg-white/80 px-5 py-4 text-[14px] text-slate">{UGC.note}</p>
             </Reveal>

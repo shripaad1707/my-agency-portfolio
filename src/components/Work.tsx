@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { RENDERS, WORK } from '../content';
-import { EASE, asset } from '../lib/motion';
+import { EASE, asset, usePauseOffscreen } from '../lib/motion';
+import { Aurora, Stars } from './ambient';
 import { Arrow, MaskHeading, Reveal } from './ui';
 
 /** A muted clip that only plays while it is on screen. */
@@ -34,7 +35,7 @@ function RenderTile({ item, index }: { item: (typeof RENDERS)[number]; index: nu
   const reduce = useReducedMotion();
   return (
     <motion.figure
-      className="dark-card zoom w-[min(74vw,300px)] shrink-0 snap-center overflow-hidden p-1.5 sm:w-auto"
+      className="dark-card spot zoom w-[min(74vw,300px)] shrink-0 snap-center overflow-hidden p-1.5 sm:w-auto"
       initial={reduce ? false : { opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
@@ -55,10 +56,18 @@ type App = Extract<(typeof WORK)[number], { host: string }>;
 
 /** A web app project: a browser window playing a tour of the live site, with the details beside it. */
 function AppCard({ app, flip }: { app: App; flip?: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'start 0.45'] });
+  const scale = useTransform(scrollYProgress, [0, 1], [0.95, 1]);
   return (
     <Reveal>
-      <article className="dark-card grid overflow-hidden p-1.5 lg:grid-cols-12">
-        <div className={`overflow-hidden rounded-[18px] border border-white/10 bg-[#0b0d18] lg:col-span-8 ${flip ? 'lg:order-2' : ''}`}>
+      <article className="dark-card spot grid overflow-hidden p-1.5 lg:grid-cols-12">
+        <motion.div
+          ref={ref}
+          style={reduce ? undefined : { scale }}
+          className={`overflow-hidden rounded-[18px] border border-white/10 bg-[#0b0d18] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.9)] lg:col-span-8 ${flip ? 'lg:order-2' : ''}`}
+        >
           <div className="flex items-center gap-3 border-b border-white/10 px-4 py-2.5" aria-hidden="true">
             <span className="flex gap-1.5">
               <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
@@ -71,7 +80,7 @@ function AppCard({ app, flip }: { app: App; flip?: boolean }) {
           <div className="relative aspect-[1280/696] bg-[#0b0d18]">
             <Loop src={app.video} poster={app.poster} label={`Tour of the ${app.title} website, scrolling from the top of the page to the footer`} />
           </div>
-        </div>
+        </motion.div>
         <div className={`flex flex-col justify-center px-5 pt-7 pb-6 sm:px-7 lg:col-span-4 lg:px-8 ${flip ? 'lg:order-1' : ''}`}>
           <span className="self-start rounded-full bg-white/[0.08] px-3 py-1 text-[12.5px] font-medium text-white/85">{app.label}</span>
           <p className="mt-5 text-[13.5px] font-medium text-[#a5b4fc]">{app.kind}</p>
@@ -95,8 +104,20 @@ function AppCard({ app, flip }: { app: App; flip?: boolean }) {
 
 export default function Work({ onContact }: { onContact: () => void }) {
   const [relay, flowstack, site, villa] = WORK;
+  const ref = useRef<HTMLElement>(null);
+  usePauseOffscreen(ref);
   return (
-    <section id="work" className="night-band relative overflow-hidden py-24 text-white lg:py-32">
+    <section
+      id="work"
+      ref={ref}
+      className="night-band relative mx-2 overflow-hidden rounded-[28px] py-24 text-white sm:mx-4 sm:rounded-[40px] lg:py-32"
+    >
+      {/* Night sky: slow light pools, twinkling stars and fine grain behind the gallery */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <Aurora preset="night" className="h-[1400px]" />
+        <Stars count={38} className="inset-x-0 top-0 h-[1300px] [mask-image:linear-gradient(to_bottom,#000_40%,transparent)]" />
+        <div className="grain absolute inset-0" />
+      </div>
       <div className="wrap relative">
         <div className="mx-auto flex max-w-[780px] flex-col items-center text-center">
           <Reveal>
@@ -127,7 +148,7 @@ export default function Work({ onContact }: { onContact: () => void }) {
         {/* Skyline Villas: the website, the mobile view and the 3D model */}
         <div className="mt-5 grid gap-5 lg:grid-cols-12">
           <Reveal className="lg:col-span-8">
-            <article className="dark-card zoom flex h-full flex-col overflow-hidden p-1.5">
+            <article className="dark-card spot zoom flex h-full flex-col overflow-hidden p-1.5">
               <div className="relative aspect-[16/10] overflow-hidden rounded-[18px] bg-[#1b1e2e]">
                 <img src={asset(site.image)} alt="Skyline Villas website home page" loading="lazy" className="zoom-img h-full w-full object-cover object-top" />
                 <Tag right>{site.label}</Tag>
@@ -146,7 +167,7 @@ export default function Work({ onContact }: { onContact: () => void }) {
           </Reveal>
 
           <Reveal className="lg:col-span-4" delay={0.1}>
-            <article className="dark-card flex h-full flex-col overflow-hidden p-1.5">
+            <article className="dark-card spot flex h-full flex-col overflow-hidden p-1.5">
               <div className="phone-stage relative flex flex-1 items-center justify-center overflow-hidden rounded-[18px] px-6 py-8">
                 <div className="relative w-[58%] max-w-[220px] overflow-hidden rounded-[26px] border-[5px] border-[#05060c] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.8)] lg:w-[64%]">
                   <img src={asset('img/work/skyline-phone.webp')} alt="Skyline Villas website on a phone" loading="lazy" className="block w-full" />
@@ -160,7 +181,7 @@ export default function Work({ onContact }: { onContact: () => void }) {
           </Reveal>
 
           <Reveal className="lg:col-span-12">
-            <article className="dark-card grid overflow-hidden p-1.5 lg:grid-cols-12">
+            <article className="dark-card spot grid overflow-hidden p-1.5 lg:grid-cols-12">
               <div className="relative aspect-[16/11] overflow-hidden rounded-[18px] bg-[#0b0d18] lg:col-span-6 lg:aspect-[4/3]">
                 <Loop src={villa.video} poster={villa.poster} label="3D villa model turning slowly" />
                 <Tag>{villa.label}</Tag>

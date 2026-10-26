@@ -1,7 +1,8 @@
 import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { CONTACT } from '../content';
-import { EASE } from '../lib/motion';
+import { EASE, usePauseOffscreen } from '../lib/motion';
+import { Aurora } from './ambient';
 import { MaskHeading } from './ui';
 
 export default function FinalCta({ onContact }: { onContact: () => void }) {
@@ -10,6 +11,7 @@ export default function FinalCta({ onContact }: { onContact: () => void }) {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], ['-10%', '10%']);
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1.12, 1, 1]);
+  usePauseOffscreen(ref);
 
   const fade = (delay: number) =>
     reduce
@@ -26,7 +28,7 @@ export default function FinalCta({ onContact }: { onContact: () => void }) {
       <div className="wrap">
         <div
           ref={ref}
-          className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#312e81] via-accent to-accent-2 px-6 py-20 text-center text-white sm:px-12 lg:py-28"
+          className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#1e1b4b] via-accent to-accent-2 px-6 py-20 text-center text-white shadow-[0_50px_110px_-50px_rgba(79,70,229,0.8)] sm:rounded-[40px] sm:px-12 lg:py-28"
         >
           {/* Soft light that drifts as the card passes through the screen */}
           <motion.div
@@ -34,12 +36,13 @@ export default function FinalCta({ onContact }: { onContact: () => void }) {
             className="pointer-events-none absolute -inset-[12%]"
             style={reduce ? undefined : { y, scale }}
           >
-            <div className="absolute inset-0 bg-[radial-gradient(40%_50%_at_20%_15%,rgba(125,211,252,0.35),transparent_70%),radial-gradient(45%_55%_at_85%_90%,rgba(255,255,255,0.22),transparent_70%)]" />
+            <Aurora preset="cta" />
           </motion.div>
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.07)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_70%_70%_at_50%_50%,#000_20%,transparent_80%)]"
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_70%_70%_at_50%_50%,#000_20%,transparent_80%)]"
           />
+          <div aria-hidden="true" className="grain pointer-events-none absolute inset-0" />
 
           <div className="relative mx-auto flex max-w-[760px] flex-col items-center">
             <motion.p

@@ -1,5 +1,5 @@
 import Lenis from 'lenis';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type RefObject } from 'react';
 
 /** Slow, decelerating "expo out". Used for every transition on the site. */
 export const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -61,4 +61,46 @@ export function useMediaQuery(query: string) {
     return () => mq.removeEventListener('change', update);
   }, [query]);
   return matches;
+}
+
+/**
+ * Pointer spotlight for every `.spot` card: one listener for the whole page,
+ * throttled to one update per frame. Mouse and trackpad only.
+ */
+export function startSpotlight() {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return () => {};
+  let frame = 0;
+  let last: PointerEvent | null = null;
+  const apply = () => {
+    frame = 0;
+    const e = last;
+    if (!e || !(e.target instanceof Element)) return;
+    const card = e.target.closest<HTMLElement>('.spot');
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+    card.style.setProperty('--my', `${e.clientY - r.top}px`);
+  };
+  const onMove = (e: PointerEvent) => {
+    last = e;
+    if (!frame) frame = requestAnimationFrame(apply);
+  };
+  window.addEventListener('pointermove', onMove, { passive: true });
+  return () => {
+    window.removeEventListener('pointermove', onMove);
+    cancelAnimationFrame(frame);
+  };
+}
+
+/** Marks a block with data-paused while it is off screen, so its looping CSS animations stop. */
+export function usePauseOffscreen(ref: RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => {
+      el.dataset.paused = entry.isIntersecting ? 'false' : 'true';
+    }, { rootMargin: '120px 0px' });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ref]);
 }

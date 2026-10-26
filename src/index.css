@@ -15,6 +15,8 @@
   --color-accent-2: #8b5cf6;
   --color-accent-soft: #eef0ff;
   --color-night: #0e1121;
+  --color-sky: #38bdf8;
+  --color-live: #22c55e;
 
   --ease-arch: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -30,6 +32,7 @@ html {
 }
 body {
   margin: 0;
+  overflow-x: clip;
   background: var(--color-paper);
   font-family: var(--font-sans);
   font-weight: 400;
@@ -103,10 +106,27 @@ body {
     font-variant-numeric: tabular-nums;
   }
   .text-gradient {
-    background: linear-gradient(92deg, var(--color-accent) 10%, var(--color-accent-2) 90%);
+    background: linear-gradient(
+      92deg,
+      var(--color-accent) 0%,
+      var(--color-accent-2) 28%,
+      #6d8bff 50%,
+      var(--color-accent-2) 72%,
+      var(--color-accent) 100%
+    );
+    background-size: 200% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    animation: sheen 9s ease-in-out infinite alternate;
+  }
+  @keyframes sheen {
+    from {
+      background-position: 0% 50%;
+    }
+    to {
+      background-position: 100% 50%;
+    }
   }
 
   /* Small pill label that sits above section headings */
@@ -169,6 +189,11 @@ body {
   }
   .btn-solid:hover {
     background: var(--color-accent);
+  }
+  .btn-glow {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.14),
+      0 14px 34px -14px rgb(79 70 229 / 0.75);
   }
   .btn-outline {
     background: #fff;
@@ -283,15 +308,15 @@ body {
     z-index: -1;
     pointer-events: none;
     background:
-      radial-gradient(38% 32% at 10% 22%, rgb(139 92 246 / 0.17), transparent 72%),
-      radial-gradient(36% 34% at 92% 52%, rgb(59 130 246 / 0.15), transparent 72%),
-      radial-gradient(44% 30% at 40% 96%, rgb(99 102 241 / 0.11), transparent 72%);
+      radial-gradient(38% 26% at 10% 28%, rgb(139 92 246 / 0.12), transparent 72%),
+      radial-gradient(36% 30% at 92% 52%, rgb(59 130 246 / 0.1), transparent 72%),
+      radial-gradient(44% 22% at 40% 74%, rgb(99 102 241 / 0.08), transparent 72%);
   }
   .glow-bg.glow-flip::before {
     background:
-      radial-gradient(36% 34% at 90% 18%, rgb(139 92 246 / 0.17), transparent 72%),
-      radial-gradient(38% 32% at 8% 62%, rgb(59 130 246 / 0.15), transparent 72%),
-      radial-gradient(44% 30% at 60% 98%, rgb(99 102 241 / 0.1), transparent 72%);
+      radial-gradient(36% 26% at 90% 28%, rgb(139 92 246 / 0.12), transparent 72%),
+      radial-gradient(38% 30% at 8% 60%, rgb(59 130 246 / 0.1), transparent 72%),
+      radial-gradient(44% 22% at 60% 76%, rgb(99 102 241 / 0.07), transparent 72%);
   }
 
   /* Lit panel behind the small previews inside cards and the demo stage */
@@ -591,5 +616,313 @@ body {
   }
   .night-band .link-btn {
     color: #fff;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Ambient motion. Everything here animates transform or opacity only, */
+/* pauses while off screen ([data-paused]) and stops under reduced     */
+/* motion. Content never depends on these layers.                      */
+/* ------------------------------------------------------------------ */
+@layer components {
+  /* Soft pools of studio light that drift slowly. Pure gradients, no blur filter. */
+  .aurora {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .aurora > i {
+    position: absolute;
+    width: var(--s, 56vmax);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, var(--c), transparent);
+    animation: drift var(--t, 24s) ease-in-out var(--d, 0s) infinite alternate;
+    will-change: transform;
+  }
+  @keyframes drift {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(var(--x1, 6vmax), var(--y1, 3vmax), 0) scale(1.12);
+    }
+    100% {
+      transform: translate3d(var(--x2, -4vmax), var(--y2, 5vmax), 0) scale(0.94);
+    }
+  }
+
+  /* Light pulses that travel along the hero grid lines */
+  .beam-x,
+  .beam-y {
+    position: absolute;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .beam-x {
+    left: 0;
+    right: 0;
+    height: 1px;
+  }
+  .beam-y {
+    top: 0;
+    bottom: 0;
+    width: 1px;
+  }
+  .beam-x::after,
+  .beam-y::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation-duration: var(--t, 8s);
+    animation-delay: var(--d, 0s);
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    will-change: transform;
+  }
+  .beam-x::after {
+    width: 18%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgb(var(--bc, 99 102 241) / 0.75), transparent);
+    transform: translateX(-100%);
+    animation-name: beam-x;
+  }
+  .beam-y::after {
+    width: 1px;
+    height: 24%;
+    background: linear-gradient(180deg, transparent, rgb(var(--bc, 99 102 241) / 0.75), transparent);
+    transform: translateY(-100%);
+    animation-name: beam-y;
+  }
+  @keyframes beam-x {
+    0% {
+      transform: translateX(-100%);
+    }
+    55%,
+    100% {
+      transform: translateX(560%);
+    }
+  }
+  @keyframes beam-y {
+    0% {
+      transform: translateY(-100%);
+    }
+    55%,
+    100% {
+      transform: translateY(420%);
+    }
+  }
+
+  /* Brighter copy of the hero grid, revealed in a circle around the pointer */
+  .grid-spot {
+    background-image:
+      linear-gradient(to right, rgb(79 70 229 / 0.22) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(79 70 229 / 0.22) 1px, transparent 1px);
+    background-size: 72px 72px;
+    -webkit-mask-image: radial-gradient(220px circle at var(--mx, -400px) var(--my, -400px), #000, transparent 72%);
+    mask-image: radial-gradient(220px circle at var(--mx, -400px) var(--my, -400px), #000, transparent 72%);
+  }
+
+  /* Endless row of services */
+  .marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee var(--t, 42s) linear infinite;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* A light that runs around the border of the offer card */
+  .beam-border {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: 1.5px;
+    border-radius: 26px;
+    background: rgb(99 102 241 / 0.18);
+    box-shadow:
+      0 1px 2px rgb(30 27 75 / 0.05),
+      0 40px 80px -40px rgb(79 70 229 / 0.5);
+  }
+  .beam-border::before {
+    content: "";
+    position: absolute;
+    inset: -60%;
+    z-index: -1;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0 60%,
+      rgb(56 189 248 / 0.9) 70%,
+      rgb(139 92 246) 80%,
+      rgb(79 70 229) 88%,
+      transparent 96%
+    );
+    animation: spin 6.5s linear infinite;
+  }
+  .beam-border > .beam-inner {
+    border-radius: 24.5px;
+    background: #fff;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  /* Pointer spotlight on cards: a soft wash plus a lit edge near the cursor */
+  .spot {
+    position: relative;
+    isolation: isolate;
+  }
+  .spot::before,
+  .spot::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.6s var(--ease-arch);
+  }
+  .spot::before {
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgb(99 102 241 / 0.08), transparent 65%);
+  }
+  .spot::after {
+    inset: 0;
+    z-index: 2;
+    padding: 1px;
+    background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgb(99 102 241 / 0.6), transparent 62%);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+  .spot:hover::before,
+  .spot:hover::after {
+    opacity: 1;
+  }
+  .dark-card.spot::before {
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgb(129 140 248 / 0.12), transparent 65%);
+  }
+  .dark-card.spot::after {
+    background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), rgb(165 180 252 / 0.55), transparent 62%);
+  }
+
+  /* Pulsing dots: red for "recording", green for "available" */
+  .live-dot {
+    position: relative;
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    flex: none;
+    border-radius: 999px;
+    background: var(--dot, var(--color-live));
+  }
+  .live-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: inherit;
+    animation: ping 2.2s var(--ease-arch) infinite;
+  }
+  @keyframes ping {
+    from {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    to {
+      transform: scale(2.8);
+      opacity: 0;
+    }
+  }
+
+  /* Stars that twinkle in the dark Work panel */
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 999px;
+    background: #fff;
+    opacity: 0.12;
+    animation: twinkle var(--t, 5s) ease-in-out var(--d, 0s) infinite alternate;
+  }
+  @keyframes twinkle {
+    to {
+      opacity: var(--o, 0.75);
+    }
+  }
+
+  /* Slow rotating colour behind the portrait */
+  .halo {
+    background: conic-gradient(from 0deg, #6366f1, #8b5cf6, #38bdf8, #a78bfa, #6366f1);
+    filter: blur(48px);
+    opacity: 0.4;
+    animation: spin 18s linear infinite;
+  }
+
+  /* Fine film grain, placed as its own layer behind the content of dark panels */
+  .grain {
+    pointer-events: none;
+    opacity: 0.07;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Big faded name at the foot of the page */
+  .footer-word {
+    font-weight: 600;
+    font-size: clamp(2.6rem, 10.6vw, 9.6rem);
+    line-height: 0.9;
+    letter-spacing: -0.055em;
+    white-space: nowrap;
+    background: linear-gradient(180deg, rgb(79 70 229 / 0.16), rgb(79 70 229 / 0));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* Anything inside a block that is off screen stops animating */
+[data-paused="true"] *,
+[data-paused="true"] *::before,
+[data-paused="true"] *::after,
+[data-paused="true"]::before,
+[data-paused="true"]::after {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-gradient,
+  .aurora > i,
+  .beam-x::after,
+  .beam-y::after,
+  .marquee-track,
+  .beam-border::before,
+  .live-dot::after,
+  .star,
+  .halo {
+    animation: none;
+  }
+  .beam-x,
+  .beam-y {
+    display: none;
+  }
+  .beam-border::before {
+    background: conic-gradient(from 210deg, transparent 0 55%, rgb(139 92 246 / 0.7) 75%, transparent 95%);
   }
 }
