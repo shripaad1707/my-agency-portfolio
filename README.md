@@ -1,8 +1,21 @@
 # Shripaad's Agency
 
-My agency portfolio. A one-page site for my work: websites, AI chat and voice assistants, automatic follow-ups and video for real estate teams and growing agencies.
+The website for my one-person studio. I make UGC-style video ads, 3D product renders, websites and web apps, and AI automations for brands.
 
-Built with React, Vite, Tailwind CSS, Motion and Lenis.
+Live: https://shripaads-agency.vercel.app
+
+![Preview of the site](public/img/og.jpg)
+
+## What's on the site
+
+- A 90-second intro video
+- Four sample UGC ads in phone frames, and the $50 starter pack
+- Services, each with a small animated preview
+- Work: Relay.ai and FlowStack AI (web apps), Skyline Villas (real estate site) and a gallery of 3D product renders made in Blender
+- Live examples of AI voice, email and WhatsApp assistants
+- About, process, FAQ and a contact form
+
+Built with React 19, TypeScript, Vite, Tailwind CSS v4, Motion and Lenis. The background motion uses only CSS transforms, pauses off screen and switches off for visitors who prefer reduced motion.
 
 ## Edit the words
 
@@ -53,6 +66,6 @@ The first time someone sends the form, FormSubmit emails you an **Activate Form*
 
 ## Media
 
-- `public/media/intro.mp4` is the 90-second vertical intro (1080x1920, H.264). `public/media/intro.webm` is a smaller VP9 copy for browsers that can't play mp4.
+- `public/media/intro.mp4` is the 90-second vertical intro (720x1280, H.264). `public/media/intro.webm` is a smaller VP9 copy for browsers that can't play mp4.
 - `public/img/intro-poster.webp` is the still that shows before the video plays.
 - `public/img/shripaad.webp` is the portrait.
