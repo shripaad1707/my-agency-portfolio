@@ -59,7 +59,7 @@ function SeenVisual({ start }: { start: boolean }) {
             <Bar className="w-[80%] bg-white/85" />
             <Bar className="w-[55%] bg-white/50" />
           </span>
-          <span className="absolute top-3 left-3 rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur">
+          <span className="absolute top-3 left-3 glass-dark rounded-full px-2 py-0.5 text-[11px] font-medium text-white">
             Reel, 0:30
           </span>
         </Show>
@@ -240,7 +240,7 @@ function RenderVisual({ start }: { start: boolean }) {
       </Show>
       <Show on={step >= 2} className="relative overflow-hidden rounded-xl bg-[#e9e7f1]">
         <img src={`${import.meta.env.BASE_URL}img/renders/fuego.webp`} alt="" className="h-full w-full object-cover" />
-        <span className="absolute inset-x-3 bottom-3 rounded-lg bg-white/90 px-3 py-2 text-[12px] font-medium backdrop-blur">Rendered in 3D</span>
+        <span className="absolute inset-x-3 bottom-3 glass rounded-lg px-3 py-2 text-[12px] font-medium">Rendered in 3D</span>
       </Show>
     </div>
   );

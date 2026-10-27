@@ -78,24 +78,31 @@ export default function Showreel() {
   return (
     <section id="showreel" className="pb-24 lg:pb-32">
       <div className="wrap" style={{ perspective: '1800px' }}>
+        <div className="relative mx-auto max-w-[1120px]">
+        {/* Soft glow under the stage. It stays still while the stage tilts, so it never has to be redrawn. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-[6%] -bottom-10 top-[35%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(79,70,229,0.35),transparent)]"
+        />
         <motion.div
           ref={stageRef}
-          className="mx-auto max-w-[1120px] rounded-[30px] bg-gradient-to-b from-accent/40 via-line to-accent-2/30 p-px shadow-[0_50px_120px_-50px_rgba(79,70,229,0.6)]"
+          className="relative rounded-[30px] bg-gradient-to-b from-accent/40 via-line to-accent-2/30 p-px will-change-transform"
           style={reduce ? undefined : { rotateX, scale, y, transformOrigin: '50% 0%' }}
         >
           {/* Full-width stage; the vertical video sits in the middle at full height, lit by soft studio lights */}
           <div className="relative aspect-[9/16] overflow-hidden rounded-[29px] bg-[#0b0d1a] sm:aspect-[4/5] lg:aspect-[16/10]">
             <div aria-hidden="true" className="absolute inset-0 hidden sm:block">
+              {/* A tiny pre-blurred copy of the poster, stretched: soft colour with no live blur filter */}
               <div
-                className="absolute inset-0 scale-125 bg-cover bg-center opacity-25 blur-3xl"
-                style={{ backgroundImage: `url(${asset('img/intro-poster.webp')})` }}
+                className="absolute inset-0 scale-110 bg-cover bg-center opacity-30"
+                style={{ backgroundImage: `url(${asset('img/intro-poster-blur.webp')})` }}
               />
               <Aurora preset="stage" />
               <div className="grain absolute inset-0" />
               <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(ellipse_70%_70%_at_50%_50%,#000_30%,transparent_80%)]" />
             </div>
 
-            <div className="relative mx-auto h-full aspect-[9/16] max-w-full sm:shadow-[0_30px_90px_-20px_rgba(0,0,0,0.75)]">
+            <div className="relative mx-auto h-full aspect-[9/16] max-w-full sm:shadow-[0_24px_60px_-20px_rgba(0,0,0,0.7)]">
               <video
                 ref={videoRef}
                 className="h-full w-full bg-black object-cover"
@@ -111,11 +118,11 @@ export default function Showreel() {
 
             {/* Small labels on the stage, wide screens only */}
             <div aria-hidden="true" className="pointer-events-none absolute inset-x-6 top-6 hidden items-center justify-between lg:flex">
-              <span className="flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3 py-1.5 text-[12.5px] font-medium text-white/85 backdrop-blur-md">
+              <span className="flex items-center gap-2 rounded-full glass-dark px-3 py-1.5 text-[12.5px] font-medium text-white/85">
                 <span className="live-dot" style={{ ['--dot' as string]: '#ff5a5f' }} />
                 My 90-second intro
               </span>
-              <span className="rounded-full border border-white/15 bg-white/[0.07] px-3 py-1.5 text-[12.5px] font-medium text-white/85 backdrop-blur-md">
+              <span className="rounded-full glass-dark px-3 py-1.5 text-[12.5px] font-medium text-white/85">
                 3D, web, video and automation
               </span>
             </div>
@@ -141,13 +148,14 @@ export default function Showreel() {
                     <path d="M0 0l10 6-10 6z" fill="currentColor" />
                   </svg>
                 </span>
-                <span className="rounded-full bg-night/70 px-3.5 py-1.5 text-[14px] font-medium tracking-[-0.01em] backdrop-blur-sm">
+                <span className="glass-ink rounded-full px-3.5 py-1.5 text-[14px] font-medium tracking-[-0.01em]">
                   Play with sound
                 </span>
               </button>
             )}
           </div>
         </motion.div>
+        </div>
 
         <div className="mx-auto mt-5 flex max-w-[1120px] flex-wrap items-center justify-between gap-x-6 gap-y-2 px-1">
           <p className="t-caption lg:invisible">My 90-second intro</p>

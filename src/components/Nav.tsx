@@ -93,7 +93,7 @@ export default function Nav({ onContact }: { onContact: () => void }) {
           <div
             className={`mt-2.5 flex h-[60px] items-center justify-between gap-6 rounded-full border pr-2 pl-4 transition-[background-color,border-color,box-shadow] duration-700 ease-arch sm:pl-5 ${
               solid && !open
-                ? 'border-ink/[0.08] bg-white/75 shadow-[0_12px_40px_-18px_rgba(30,27,75,0.28)] backdrop-blur-xl'
+                ? 'nav-glass'
                 : 'border-transparent bg-transparent'
             }`}
           >

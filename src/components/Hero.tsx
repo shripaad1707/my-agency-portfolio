@@ -45,7 +45,7 @@ function FloatCard({ index, px, py }: { index: number; px: MotionValue<number>; 
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.9, ease: EASE, delay: 1.5 + index * 0.1 }}
     >
-      <motion.div style={reduce ? undefined : { x, y }}>
+      <motion.div className="will-change-transform" style={reduce ? undefined : { x, y }}>
         <motion.div
           className="float-card flex items-center gap-3 px-3.5 py-3"
           animate={reduce ? undefined : { y: [0, -7, 0] }}
@@ -120,7 +120,7 @@ export default function Hero({ onContact }: { onContact: () => void }) {
       {/* Studio lights, grid and light pulses: settle on load, then drift slower than the page */}
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 -top-[4%] -bottom-[10%]"
+        className="pointer-events-none absolute inset-x-0 -top-[4%] -bottom-[10%] will-change-transform"
         style={reduce ? undefined : { y: glowY }}
       >
         <motion.div
@@ -137,7 +137,7 @@ export default function Hero({ onContact }: { onContact: () => void }) {
         </motion.div>
       </motion.div>
 
-      <motion.div className="wrap relative" style={reduce ? undefined : { y: copyY, opacity: copyOpacity }}>
+      <motion.div className="wrap relative will-change-transform" style={reduce ? undefined : { y: copyY, opacity: copyOpacity }}>
         <div className="relative mx-auto flex max-w-[1080px] flex-col items-center text-center">
           <motion.p className="pill h-auto min-h-9 gap-2.5 py-1.5 pr-4 pl-1.5 text-[12.5px] sm:text-[13px]" {...fade(0.35)}>
             <img src={asset('img/shripaad.webp')} alt="" className="h-6 w-6 shrink-0 rounded-full object-cover" />

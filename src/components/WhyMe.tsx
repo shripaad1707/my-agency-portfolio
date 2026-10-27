@@ -26,7 +26,7 @@ function Portrait() {
           animate={seen ? { scale: 1 } : undefined}
           transition={{ duration: 1.9, ease: EASE }}
         />
-        <span className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-white/90 px-3 py-1.5 text-[13px] font-medium text-ink shadow-[0_10px_30px_-12px_rgba(14,17,33,0.5)] backdrop-blur">
+        <span className="absolute bottom-4 left-4 flex items-center gap-2 glass rounded-full px-3 py-1.5 text-[13px] font-medium text-ink">
           <span className="live-dot" />
           Taking on new projects
         </span>

@@ -33,7 +33,7 @@ export default function FinalCta({ onContact }: { onContact: () => void }) {
           {/* Soft light that drifts as the card passes through the screen */}
           <motion.div
             aria-hidden="true"
-            className="pointer-events-none absolute -inset-[12%]"
+            className="pointer-events-none absolute -inset-[12%] will-change-transform"
             style={reduce ? undefined : { y, scale }}
           >
             <Aurora preset="cta" />
@@ -46,7 +46,7 @@ export default function FinalCta({ onContact }: { onContact: () => void }) {
 
           <div className="relative mx-auto flex max-w-[760px] flex-col items-center">
             <motion.p
-              className="inline-flex h-8 items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3.5 text-[13px] font-medium backdrop-blur"
+              className="inline-flex h-8 items-center gap-2 rounded-full glass-dark px-3.5 text-[13px] font-medium"
               {...fade(0)}
             >
               <span className="h-1.5 w-1.5 rounded-full bg-white" aria-hidden="true" />

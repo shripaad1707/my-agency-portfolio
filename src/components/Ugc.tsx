@@ -1,40 +1,20 @@
-import { useEffect, useRef, useState } from 'react';
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react';
+import { useRef, useState } from 'react';
+import { motion, useMotionValueEvent, useReducedMotion, useScroll } from 'motion/react';
 import { UGC, UGC_SAMPLES } from '../content';
-import { EASE, asset, useMediaQuery, usePauseOffscreen } from '../lib/motion';
+import { EASE, asset, useMediaQuery, usePauseOffscreen, useSmartVideo } from '../lib/motion';
 import { Arrow, Icon, MaskHeading, Pill, Reveal } from './ui';
 
-// On wide screens the phones sit in a gentle wave and drift at different speeds as you scroll.
-const WAVE = [
-  { offset: 36, drift: 34 },
-  { offset: 0, drift: 64 },
-  { offset: 52, drift: 42 },
-  { offset: 12, drift: 72 },
-];
+// On wide screens the phones sit in a gentle, fixed wave (no scroll-linked motion over the videos).
+const WAVE = [36, 0, 52, 12];
 
 type Sample = (typeof UGC_SAMPLES)[number];
 
 /** One sample ad in a phone frame. Plays muted while on screen; tap for sound. */
-function Phone({ sample, index, progress, wave }: { sample: Sample; index: number; progress: MotionValue<number>; wave: boolean }) {
+function Phone({ sample, index, wave }: { sample: Sample; index: number; wave: boolean }) {
   const ref = useRef<HTMLVideoElement>(null);
   const reduce = useReducedMotion();
   const [sound, setSound] = useState(false);
-  const w = WAVE[index % WAVE.length];
-  const drift = useTransform(progress, [0, 1], [w.drift, -w.drift]);
-
-  useEffect(() => {
-    const v = ref.current;
-    if (!v || reduce) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) v.play().catch(() => {});
-        else v.pause();
-      },
-      { threshold: 0.4 },
-    );
-    io.observe(v);
-    return () => io.disconnect();
-  }, [reduce]);
+  useSmartVideo(ref, 0.4);
 
   const toggle = () => {
     const v = ref.current;
@@ -58,9 +38,9 @@ function Phone({ sample, index, progress, wave }: { sample: Sample; index: numbe
       viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 1.3, ease: EASE, delay: index * 0.08 }}
     >
-      <motion.div style={wave && !reduce ? { y: drift, marginTop: w.offset } : undefined} className="group">
+      <div style={wave ? { marginTop: WAVE[index % WAVE.length] } : undefined} className="group">
       <div className="relative aspect-[9/16] overflow-hidden rounded-[30px] border-[6px] border-night bg-night shadow-[0_30px_70px_-30px_rgba(14,17,33,0.55)] transition-[transform,box-shadow] duration-700 ease-arch group-hover:-translate-y-1.5 group-hover:shadow-[0_44px_80px_-30px_rgba(79,70,229,0.55)]">
-        <span aria-hidden="true" className="pointer-events-none absolute top-3 left-3 z-10 flex items-center gap-1.5 rounded-full bg-night/55 px-2 py-1 text-[10.5px] font-semibold tracking-[0.02em] text-white backdrop-blur-sm">
+        <span aria-hidden="true" className="pointer-events-none absolute top-3 left-3 z-10 flex items-center gap-1.5 glass-ink rounded-full px-2 py-1 text-[10.5px] font-semibold tracking-[0.02em] text-white">
           <span className="live-dot h-1.5 w-1.5" style={{ ['--dot' as string]: '#ff5a5f' }} />
           Ad {index + 1}
         </span>
@@ -73,13 +53,14 @@ function Phone({ sample, index, progress, wave }: { sample: Sample; index: numbe
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="none"
+          disablePictureInPicture
           aria-label={`Sample UGC ad for ${sample.product}`}
         />
         <button
           type="button"
           onClick={toggle}
-          className="absolute right-3 bottom-3 grid h-10 w-10 place-items-center rounded-full bg-night/70 text-white backdrop-blur-sm transition-colors duration-500 hover:bg-night"
+          className="absolute right-3 bottom-3 grid h-10 w-10 place-items-center glass-ink rounded-full text-white transition-colors duration-500 hover:bg-night"
           aria-label={sound ? 'Mute' : 'Play with sound'}
           aria-pressed={sound}
         >
@@ -100,7 +81,7 @@ function Phone({ sample, index, progress, wave }: { sample: Sample; index: numbe
         <span className="block text-[15px] font-semibold tracking-[-0.01em]">{sample.product}</span>
         <span className="block text-[13.5px] text-slate">{sample.angle}</span>
       </figcaption>
-      </motion.div>
+      </div>
     </motion.figure>
   );
 }
@@ -153,7 +134,6 @@ export default function Ugc({ onContact }: { onContact: () => void }) {
   const gridRef = useRef<HTMLDivElement>(null);
   const offerRef = useRef<HTMLDivElement>(null);
   const wide = useMediaQuery('(min-width: 1024px)');
-  const { scrollYProgress } = useScroll({ target: gridRef, offset: ['start end', 'end start'] });
   usePauseOffscreen(offerRef);
 
   return (
@@ -183,7 +163,7 @@ export default function Ugc({ onContact }: { onContact: () => void }) {
             data-lenis-prevent-wheel
           >
             {UGC_SAMPLES.map((s, i) => (
-              <Phone key={s.id} sample={s} index={i} progress={scrollYProgress} wave={wide} />
+              <Phone key={s.id} sample={s} index={i} wave={wide} />
             ))}
           </div>
         )}

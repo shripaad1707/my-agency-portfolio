@@ -15,8 +15,8 @@ let lenis: Lenis | null = null;
 export function startSmoothScroll() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return () => {};
   lenis = new Lenis({
-    duration: 1.15,
-    easing: (t) => 1 - Math.pow(1 - t, 3.2),
+    lerp: 0.11,
+    wheelMultiplier: 1,
     smoothWheel: true,
     anchors: { offset: NAV_OFFSET },
   });
@@ -103,4 +103,43 @@ export function usePauseOffscreen(ref: RefObject<HTMLElement | null>) {
     io.observe(el);
     return () => io.disconnect();
   }, [ref]);
+}
+
+/**
+ * Muted looping clips that cost nothing until they matter: the file starts
+ * loading about a screen before the video arrives, plays only while it is
+ * mostly on screen, and pauses as soon as it leaves.
+ */
+export function useSmartVideo(ref: RefObject<HTMLVideoElement | null>, playAt = 0.35) {
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let warmed = false;
+    const warm = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting && !warmed) {
+          warmed = true;
+          v.preload = 'auto';
+          v.load();
+          warm.disconnect();
+        }
+      },
+      { rootMargin: '1000px 0px' },
+    );
+    const play = new IntersectionObserver(
+      ([e]) => {
+        if (still) return;
+        if (e.isIntersecting && e.intersectionRatio >= playAt) v.play().catch(() => {});
+        else v.pause();
+      },
+      { threshold: [0, playAt] },
+    );
+    warm.observe(v);
+    play.observe(v);
+    return () => {
+      warm.disconnect();
+      play.disconnect();
+    };
+  }, [ref, playAt]);
 }

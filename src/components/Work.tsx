@@ -1,30 +1,34 @@
 import { useEffect, useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { RENDERS, WORK } from '../content';
-import { EASE, asset, usePauseOffscreen } from '../lib/motion';
+import { EASE, asset, usePauseOffscreen, useSmartVideo } from '../lib/motion';
 import { Aurora, Stars } from './ambient';
 import { Arrow, MaskHeading, Reveal } from './ui';
 
-/** A muted clip that only plays while it is on screen. */
+/** A muted clip that loads just before it is needed and only plays while it is on screen. */
 function Loop({ src, poster, label }: { src: string; poster: string; label: string }) {
   const ref = useRef<HTMLVideoElement>(null);
-  const reduce = useReducedMotion();
-  useEffect(() => {
-    const v = ref.current;
-    if (!v || reduce) return;
-    const io = new IntersectionObserver(([e]) => (e.isIntersecting ? v.play().catch(() => {}) : v.pause()), { threshold: 0.3 });
-    io.observe(v);
-    return () => io.disconnect();
-  }, [reduce]);
+  useSmartVideo(ref);
   return (
-    <video ref={ref} className="h-full w-full object-cover" src={asset(src)} poster={asset(poster)} muted loop playsInline preload="metadata" aria-label={label} />
+    <video
+      ref={ref}
+      className="h-full w-full object-cover"
+      src={asset(src)}
+      poster={asset(poster)}
+      muted
+      loop
+      playsInline
+      preload="none"
+      disablePictureInPicture
+      aria-label={label}
+    />
   );
 }
 
 /** Small label that sits on top of an image. */
 function Tag({ children, right }: { children: string; right?: boolean }) {
   return (
-    <span className={`absolute top-4 ${right ? 'right-4' : 'left-4'} rounded-full bg-night/65 px-3 py-1 text-[12.5px] font-medium text-white backdrop-blur-md`}>
+    <span className={`absolute top-4 ${right ? 'right-4' : 'left-4'} glass-ink rounded-full px-3 py-1 text-[12.5px] font-medium text-white`}>
       {children}
     </span>
   );
@@ -56,16 +60,10 @@ type App = Extract<(typeof WORK)[number], { host: string }>;
 
 /** A web app project: a browser window playing a tour of the live site, with the details beside it. */
 function AppCard({ app, flip }: { app: App; flip?: boolean }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'start 0.45'] });
-  const scale = useTransform(scrollYProgress, [0, 1], [0.95, 1]);
   return (
     <Reveal>
       <article className="dark-card spot grid overflow-hidden p-1.5 lg:grid-cols-12">
-        <motion.div
-          ref={ref}
-          style={reduce ? undefined : { scale }}
+        <div
           className={`overflow-hidden rounded-[18px] border border-white/10 bg-[#0b0d18] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.9)] lg:col-span-8 ${flip ? 'lg:order-2' : ''}`}
         >
           <div className="flex items-center gap-3 border-b border-white/10 px-4 py-2.5" aria-hidden="true">
@@ -80,7 +78,7 @@ function AppCard({ app, flip }: { app: App; flip?: boolean }) {
           <div className="relative aspect-[1280/696] bg-[#0b0d18]">
             <Loop src={app.video} poster={app.poster} label={`Tour of the ${app.title} website, scrolling from the top of the page to the footer`} />
           </div>
-        </motion.div>
+        </div>
         <div className={`flex flex-col justify-center px-5 pt-7 pb-6 sm:px-7 lg:col-span-4 lg:px-8 ${flip ? 'lg:order-1' : ''}`}>
           <span className="self-start rounded-full bg-white/[0.08] px-3 py-1 text-[12.5px] font-medium text-white/85">{app.label}</span>
           <p className="mt-5 text-[13.5px] font-medium text-[#a5b4fc]">{app.kind}</p>
@@ -104,19 +102,18 @@ function AppCard({ app, flip }: { app: App; flip?: boolean }) {
 
 export default function Work({ onContact }: { onContact: () => void }) {
   const [relay, flowstack, site, villa] = WORK;
-  const ref = useRef<HTMLElement>(null);
-  usePauseOffscreen(ref);
+  const skyRef = useRef<HTMLDivElement>(null);
+  usePauseOffscreen(skyRef);
   return (
     <section
       id="work"
-      ref={ref}
       className="night-band relative mx-2 overflow-hidden rounded-[28px] py-24 text-white sm:mx-4 sm:rounded-[40px] lg:py-32"
     >
-      {/* Night sky: slow light pools, twinkling stars and fine grain behind the gallery */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <Aurora preset="night" className="h-[1400px]" />
-        <Stars count={38} className="inset-x-0 top-0 h-[1300px] [mask-image:linear-gradient(to_bottom,#000_40%,transparent)]" />
-        <div className="grain absolute inset-0" />
+      {/* Night sky at the top of the panel: slow light pools, twinkling stars and fine grain. Paused once scrolled past. */}
+      <div ref={skyRef} aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[1300px] overflow-hidden">
+        <Aurora preset="night" />
+        <Stars count={24} className="inset-0 [mask-image:linear-gradient(to_bottom,#000_40%,transparent)]" />
+        <div className="grain absolute inset-0 [mask-image:linear-gradient(to_bottom,#000_50%,transparent)]" />
       </div>
       <div className="wrap relative">
         <div className="mx-auto flex max-w-[780px] flex-col items-center text-center">
