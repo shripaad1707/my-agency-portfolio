@@ -1,4 +1,3 @@
-import Lenis from 'lenis';
 import { useEffect, useState, type RefObject } from 'react';
 
 /** Slow, decelerating "expo out". Used for every transition on the site. */
@@ -7,48 +6,42 @@ export const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 /** Resolves a file in /public, so the site works at the domain root or in a sub-folder. */
 export const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 
-// Lenis already respects the page's scroll-padding-top (set in index.css), so no extra offset.
-const NAV_OFFSET = 0;
-let lenis: Lenis | null = null;
-
-/** Inertial smooth scrolling. Skipped entirely when the visitor prefers reduced motion. */
+/*
+ * Scrolling is the browser's own. A JavaScript smooth-scroll layer moves the
+ * page on the main thread, so any busy moment (a video starting, an image
+ * decoding, an entrance animation) froze the scroll for a frame. Native
+ * scrolling runs on its own thread and stays fluid; browsers already smooth
+ * mouse-wheel scrolling themselves.
+ */
 export function startSmoothScroll() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return () => {};
-  lenis = new Lenis({
-    lerp: 0.11,
-    wheelMultiplier: 1,
-    smoothWheel: true,
-    anchors: { offset: NAV_OFFSET },
-  });
-  let frame = 0;
-  const raf = (time: number) => {
-    lenis?.raf(time);
-    frame = requestAnimationFrame(raf);
-  };
-  frame = requestAnimationFrame(raf);
-  return () => {
-    cancelAnimationFrame(frame);
-    lenis?.destroy();
-    lenis = null;
-  };
+  return () => {};
 }
 
-export const pauseScroll = () => lenis?.stop();
-export const resumeScroll = () => lenis?.start();
+let locks = 0;
+/** Stops the page scrolling behind a menu or drawer. */
+export const pauseScroll = () => {
+  locks += 1;
+  document.documentElement.style.overflow = 'hidden';
+};
+export const resumeScroll = () => {
+  locks = Math.max(0, locks - 1);
+  if (!locks) document.documentElement.style.overflow = '';
+};
+
+const smooth = () => (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth');
 
 export function scrollToId(id: string) {
   if (id === 'top') {
-    if (lenis) lenis.scrollTo(0, { force: true });
-    else window.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0, behavior: smooth() });
     return;
   }
   const el = document.getElementById(id);
   if (el) scrollToEl(el);
 }
 
+/** Scrolls an element into view under the fixed nav (scroll-padding-top in index.css). */
 export function scrollToEl(el: HTMLElement) {
-  if (lenis) lenis.scrollTo(el, { offset: NAV_OFFSET, force: true });
-  else el.scrollIntoView();
+  el.scrollIntoView({ behavior: smooth(), block: 'start' });
 }
 
 export function useMediaQuery(query: string) {
@@ -110,10 +103,11 @@ export function usePauseOffscreen(ref: RefObject<HTMLElement | null>) {
  * loading about a screen before the video arrives, plays only while it is
  * mostly on screen, and pauses as soon as it leaves.
  */
-export function useSmartVideo(ref: RefObject<HTMLVideoElement | null>, playAt = 0.35) {
+export function useSmartVideo(ref: RefObject<HTMLVideoElement | null>, playAt = 0.35, delay = 0) {
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
+    let timer = 0;
     const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let warmed = false;
     const warm = new IntersectionObserver(
@@ -130,7 +124,9 @@ export function useSmartVideo(ref: RefObject<HTMLVideoElement | null>, playAt = 
     const play = new IntersectionObserver(
       ([e]) => {
         if (still) return;
-        if (e.isIntersecting && e.intersectionRatio >= playAt) v.play().catch(() => {});
+        window.clearTimeout(timer);
+        // Clips that appear together start a moment apart, so their decoders don't all spin up in the same frame.
+        if (e.isIntersecting && e.intersectionRatio >= playAt) timer = window.setTimeout(() => v.play().catch(() => {}), delay);
         else v.pause();
       },
       { threshold: [0, playAt] },
@@ -138,8 +134,9 @@ export function useSmartVideo(ref: RefObject<HTMLVideoElement | null>, playAt = 
     warm.observe(v);
     play.observe(v);
     return () => {
+      window.clearTimeout(timer);
       warm.disconnect();
       play.disconnect();
     };
-  }, [ref, playAt]);
+  }, [ref, playAt, delay]);
 }

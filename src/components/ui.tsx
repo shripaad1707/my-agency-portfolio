@@ -57,8 +57,8 @@ export function MaskHeading({ lines, mobileLines, as = 'h2', className, immediat
     set.map((line, i) => (
       <span key={`${visibility}-${i}`} className={`mask-line ${visibility}`} aria-hidden="true">
         <motion.span
-          initial={reduce ? false : { y: '112%' }}
-          animate={play ? { y: '0%' } : undefined}
+          initial={reduce ? false : { transform: 'translateY(112%)' }}
+          animate={play ? { transform: 'translateY(0%)' } : undefined}
           transition={{ duration: 1.3, ease: EASE, delay: delay + i * 0.1 }}
         >
           <LineContent line={line} />
@@ -98,8 +98,8 @@ export function Reveal({ children, delay = 0, y = 18, className, as = 'div' }: R
   return (
     <Tag
       className={className}
-      initial={reduce ? false : { opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduce ? false : { opacity: 0, transform: `translateY(${y}px)` }}
+      whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
       viewport={{ once: true, amount: 0.25 }}
       transition={{ duration: 0.9, ease: EASE, delay }}
     >

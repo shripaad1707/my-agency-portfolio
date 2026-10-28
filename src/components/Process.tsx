@@ -45,8 +45,8 @@ export default function Process() {
               <motion.li
                 key={step.title}
                 className="relative flex flex-col"
-                initial={reduce ? false : { opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={reduce ? false : { opacity: 0, transform: 'translateY(14px)' }}
+                whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
                 viewport={{ once: true, amount: 0.25 }}
                 transition={{ duration: 0.9, ease: EASE, delay: i * 0.06 }}
               >

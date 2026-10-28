@@ -29,8 +29,8 @@ function Show({ on, children, className = '', y = 10 }: { on: boolean; children:
   return (
     <motion.div
       className={className}
-      initial={reduce ? false : { opacity: 0, y }}
-      animate={on ? { opacity: 1, y: 0 } : undefined}
+      initial={reduce ? false : { opacity: 0, transform: `translateY(${y}px)` }}
+      animate={on ? { opacity: 1, transform: 'translateY(0px)' } : undefined}
       transition={{ duration: 0.6, ease: EASE }}
     >
       {children}
@@ -236,10 +236,10 @@ function RenderVisual({ start }: { start: boolean }) {
   return (
     <div className="absolute inset-0 grid grid-cols-2 gap-3 p-4 sm:p-5">
       <Show on={step >= 1} className="relative overflow-hidden rounded-xl bg-[#e9e7f1]">
-        <img src={`${import.meta.env.BASE_URL}img/renders/solenne.webp`} alt="" className="h-full w-full object-cover" />
+        <img src={`${import.meta.env.BASE_URL}img/renders/solenne.webp`} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
       </Show>
       <Show on={step >= 2} className="relative overflow-hidden rounded-xl bg-[#e9e7f1]">
-        <img src={`${import.meta.env.BASE_URL}img/renders/fuego.webp`} alt="" className="h-full w-full object-cover" />
+        <img src={`${import.meta.env.BASE_URL}img/renders/fuego.webp`} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
         <span className="absolute inset-x-3 bottom-3 glass rounded-lg px-3 py-2 text-[12px] font-medium">Rendered in 3D</span>
       </Show>
     </div>

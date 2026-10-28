@@ -17,8 +17,8 @@ export default function FinalCta({ onContact }: { onContact: () => void }) {
     reduce
       ? {}
       : {
-          initial: { opacity: 0, y: 18 },
-          whileInView: { opacity: 1, y: 0 },
+          initial: { opacity: 0, transform: 'translateY(18px)' },
+          whileInView: { opacity: 1, transform: 'translateY(0px)' },
           viewport: { once: true, amount: 0.25 },
           transition: { duration: 0.9, ease: EASE, delay },
         };

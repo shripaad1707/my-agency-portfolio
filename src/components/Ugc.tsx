@@ -14,7 +14,7 @@ function Phone({ sample, index, wave }: { sample: Sample; index: number; wave: b
   const ref = useRef<HTMLVideoElement>(null);
   const reduce = useReducedMotion();
   const [sound, setSound] = useState(false);
-  useSmartVideo(ref, 0.4);
+  useSmartVideo(ref, 0.4, 120 + index * 220);
 
   const toggle = () => {
     const v = ref.current;
@@ -33,8 +33,8 @@ function Phone({ sample, index, wave }: { sample: Sample; index: number; wave: b
   return (
     <motion.figure
       className="w-[min(62vw,260px)] shrink-0 snap-center lg:w-auto"
-      initial={reduce ? false : { opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduce ? false : { opacity: 0, transform: 'translateY(24px)' }}
+      whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
       viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 1.3, ease: EASE, delay: index * 0.08 }}
     >

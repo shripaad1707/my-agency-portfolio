@@ -40,13 +40,13 @@ function RenderTile({ item, index }: { item: (typeof RENDERS)[number]; index: nu
   return (
     <motion.figure
       className="dark-card spot zoom w-[min(74vw,300px)] shrink-0 snap-center overflow-hidden p-1.5 sm:w-auto"
-      initial={reduce ? false : { opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduce ? false : { opacity: 0, transform: 'translateY(28px)' }}
+      whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 1.2, ease: EASE, delay: (index % 3) * 0.08 }}
     >
       <div className="relative aspect-[4/5] overflow-hidden rounded-[18px]" style={{ background: item.tone }}>
-        <img src={asset(item.image)} alt={item.alt} loading="lazy" className="zoom-img h-full w-full object-cover" />
+        <img src={asset(item.image)} alt={item.alt} loading="lazy" decoding="async" width={900} height={1125} className="zoom-img h-full w-full object-cover" />
       </div>
       <figcaption className="flex items-baseline justify-between gap-3 px-3 pt-4 pb-2.5">
         <span className="text-[15px] font-semibold tracking-[-0.015em] text-white">{item.name}</span>
@@ -147,7 +147,7 @@ export default function Work({ onContact }: { onContact: () => void }) {
           <Reveal className="lg:col-span-8">
             <article className="dark-card spot zoom flex h-full flex-col overflow-hidden p-1.5">
               <div className="relative aspect-[16/10] overflow-hidden rounded-[18px] bg-[#1b1e2e]">
-                <img src={asset(site.image)} alt="Skyline Villas website home page" loading="lazy" className="zoom-img h-full w-full object-cover object-top" />
+                <img src={asset(site.image)} alt="Skyline Villas website home page" loading="lazy" decoding="async" width={1400} height={875} className="zoom-img h-full w-full object-cover object-top" />
                 <Tag right>{site.label}</Tag>
               </div>
               <div className="flex flex-1 flex-col gap-4 px-5 pt-6 pb-5 sm:flex-row sm:items-end sm:justify-between sm:px-6">
@@ -167,7 +167,7 @@ export default function Work({ onContact }: { onContact: () => void }) {
             <article className="dark-card spot flex h-full flex-col overflow-hidden p-1.5">
               <div className="phone-stage relative flex flex-1 items-center justify-center overflow-hidden rounded-[18px] px-6 py-8">
                 <div className="relative w-[58%] max-w-[220px] overflow-hidden rounded-[26px] border-[5px] border-[#05060c] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.8)] lg:w-[64%]">
-                  <img src={asset('img/work/skyline-phone.webp')} alt="Skyline Villas website on a phone" loading="lazy" className="block w-full" />
+                  <img src={asset('img/work/skyline-phone.webp')} alt="Skyline Villas website on a phone" loading="lazy" decoding="async" width={647} height={1400} className="block w-full" />
                 </div>
               </div>
               <div className="px-5 pt-5 pb-5 sm:px-6">

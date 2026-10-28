@@ -57,11 +57,9 @@ export default function Nav({ onContact }: { onContact: () => void }) {
   useEffect(() => {
     if (!open) return;
     pauseScroll();
-    document.documentElement.style.overflow = 'hidden';
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
     window.addEventListener('keydown', onKey);
     return () => {
-      document.documentElement.style.overflow = '';
       resumeScroll();
       window.removeEventListener('keydown', onKey);
     };
